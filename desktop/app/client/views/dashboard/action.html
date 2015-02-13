@@ -1,0 +1,79 @@
+<div class="col-lg-5 col-md-5 col-sm-8 col-xs-9 bhoechie-tab-container">
+	 <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 bhoechie-tab-menu" style="padding: 10px;">
+		  <div class="list-group" ng-init="tab=1">
+				<a href="" class="list-group-item active text-center" ng-class="tab==1 ? 'active' : ''" ng-click="tab=1;">
+				  <img src="../../images/amazon-64x64.png">
+				</a>
+				<!--<a href="" class="list-group-item text-center" ng-class="tab==2 ? 'active' : ''" ng-click="tab=2;">
+				  <img src="../../images/eBay_128x128.png">
+				</a>-->
+				<a href="" class="list-group-item text-center" ng-class="tab==3 ? 'active' : ''" ng-click="tab=3;">
+				  <img src="../../images/flipkart-64x64.png">
+				</a>
+				<a href="" class="list-group-item text-center" ng-class="tab==4 ? 'active' : ''" ng-click="tab=4;">
+				  <img src="../../images/snapdeal-64x64.png">
+				</a>
+		 </div>
+	</div>
+	<div class="col-lg-9 col-md-9 col-sm-9 col-xs-9 bhoechie-tab">
+		<!-- Amazon section -->
+		<div class="bhoechie-tab-content"  ng-class="tab==1 ? 'active' : ''">
+			<form>
+				<div class="form-group">
+					<input type="email" class="form-control" id="accesskeyid" placeholder="Access Key Id">
+				</div>
+				<div class="form-group">
+					<input type="password" class="form-control" id="secretaccesskey" placeholder="Secret Access Key">
+				</div>
+				<div class="form-group">
+					<input type="password" class="form-control" id="appname" placeholder="Application Name">
+				</div>
+				<div class="form-group">
+					<input type="password" class="form-control" id="appver" placeholder="Application Version">
+				</div>
+				<div class="form-group">
+					<input type="password" class="form-control" id="marketid" placeholder="Market Place Id">
+				</div>
+				<div class="form-group">
+					<input type="password" class="form-control" id="serviceurl" placeholder="Service URL">
+				</div>
+				<button style="float: right;" type="submit" class="btn btn-primary">Submit</button>
+			</form>
+		</div>
+		
+		<!-- Ebay section -->
+		<!--<div class="bhoechie-tab-content"  ng-class="tab==2 ? 'active' : ''">
+			<center>
+			  <h1 class="glyphicon glyphicon-road" style="font-size:12em;color:#5bc0de"></h1>
+			  <h2 style="margin-top: 0;color:#5bc0de">Cooming Soon</h2>
+			</center>
+		</div>-->
+
+		<!-- flipkart search -->
+		<div class="bhoechie-tab-content" ng-class="tab==3 ? 'active' : ''">
+			<form>
+				<div class="form-group">
+					<input type="password" class="form-control" id="appname" placeholder="Application Name">
+				</div>
+				<div class="form-group">
+					<input type="password" class="form-control" id="username" placeholder="Username">
+				</div>
+				<div class="form-group">
+					<input type="password" class="form-control" id="password" placeholder="Password">
+				</div>
+				<div class="form-group">
+					<input type="password" class="form-control" id="serviceurl" placeholder="Service URL">
+				</div>
+				<button style="float: right;" type="submit" class="btn btn-primary">Submit</button>
+			</form>
+		</div>
+		
+		<!-- snapdeal search -->
+		<div class="bhoechie-tab-content" ng-class="tab==4 ? 'active' : ''">
+			<center>
+				<h1 class="glyphicon glyphicon-cutlery" style="font-size:12em;color:#5bc0de"></h1>
+				<h2 style="margin-top: 0;color:#5bc0de">Cooming Soon</h2>
+			</center>
+		</div>
+	</div>
+</div>

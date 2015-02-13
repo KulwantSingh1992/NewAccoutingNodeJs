@@ -1,0 +1,23 @@
+<form id="amazon-setting-form" role="userform" data-toggle="validator">
+
+   <div class="form-group">
+		<label for="SellerID">Seller Id</label>
+		<label for="" style="color:red;">*</label>
+		<input type="text" value="{{settingDetail.AMAZON.SellerID}}" class="form-control" name="SellerID" id="SellerIDAmaz" placeholder="Enter SellerID" >
+	</div>
+	<div class="form-group">
+		<label for="MarketplaceId">Marketplace Id</label>
+		<label for="" style="color:red;">*</label>
+		<input type="text" class="form-control" value="{{settingDetail.AMAZON.MarketplaceID}}" name="MarketplaceID" id="MarketplaceID" placeholder="Enter MarketplaceId" >
+	</div>
+	<div class="form-group">
+		<label for="AWSAccessKeyID">AWS Access Key Id</label>
+		<label for="" style="color:red;">*</label>
+		<input type="text" class="form-control" value="{{settingDetail.AMAZON.AWSAccessKeyID}}" name="AWSAccessKeyID" id="AWSAccessKeyID" placeholder="Enter AWSAccessKeyID" >
+	</div>
+	<div class="form-group">
+		<label for="SecretKey">Secret Key</label>
+		<label for="" style="color:red;">*</label>
+		<input type="text" class="form-control" value="{{settingDetail.AMAZON.SecretKey}}" name="SecretKey" id="SecretKey" placeholder="Enter SecretKey" >
+	</div>                         
+</form>

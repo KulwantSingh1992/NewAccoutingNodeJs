@@ -1,0 +1,59 @@
+<div class="wizard-area" ng-controller="ConfigCtrl">
+    <div class="wizard-box" id="rootwizard">
+        <h3 class="wizard-header">Marketplace Configuration</h3>
+        <div style="width:90px;float:left;overflow: hidden;height: 415px;overflow-y: scroll;">
+            <ul class="nav nav-tabs wizard-channel-list">
+                <li ng-class="wForm.index==1?'active':''">
+                    <a ng-click="wForm.index=1;">
+                        <img src="../images/flipkart-24x24.png" alt="" style="width:42px;height:42px;border:0"></a>
+                </li>
+                <li ng-class="wForm.index==2?'active':''">
+                    <a ng-click="wForm.index=2;">
+                        <img src="../images/amazon-24x24.png" alt="" style="width:42px;height:42px;border:0">
+                        </a>
+                </li>
+                <!-- <li ng-class="wForm.index==3?'active':''">
+                    <a ng-click="wForm.index=3;">
+                        <img src="../images/snapdeal.png" alt="" style="width:42px;height:42px;border:0">
+                        </a>
+                </li>
+                <li ng-class="wForm.index==4?'active':''">
+                    <a ng-click="wForm.index=4;">
+                        <img src="../images/paytm.png" alt="" style="width:42px;height:42px;border:0"></a>
+                </li> -->
+                
+                <li ng-class="wForm.index==3?'active':''">
+                    <a ng-click="wForm.index=3;">
+                        <img src="../images/User.png" alt="" style="width:42px;height:42px;border:0"></a>
+                </li>
+                <li ng-class="wForm.index==4?'active':''">
+                    <a ng-click="wForm.index=4;">
+                        <img src="../images/tally.png" alt="" style="width:42px;height:42px;border:0"></a>
+                </li>
+            </ul>
+        </div> 
+
+        <div style="width:65%;float:left; margin-left: 51px;">
+
+            <div ng-if="wForm.index==1" id="FK-setting" ng-include="'views/setting/flipkart-setting-form.html'"></div>
+            <div ng-if="wForm.index==2" id="AMAZON-setting" ng-include="'views/setting/amazon-setting-form.html'"></div>
+            <!-- <div ng-if="wForm.index==3" id="SD-setting" ng-include="'views/setting/SD-setting-form.html'"></div>
+            <div ng-if="wForm.index==4" id="PTM-setting" ng-include="'views/setting/PTM-setting-form.html'"></div> -->
+            
+            <div ng-if="wForm.index==3" id="other-setting" ng-include="'views/setting/other-setting-form.html'"></div>
+            <div ng-if="wForm.index==4" id="tally-setting" ng-include="'views/setting/tally-setting-form.html'"></div>
+
+            <button style="float:left;" ng-if="wForm.index!=1" ng-click="wForm.index=wForm.index-1;" class="btn btn-danger">Previous</button>
+            <!-- <button  style="float:right;" ng-if="wForm.index==4" ng-click="main.dashboard='dashboard';" class="btn btn-primary">Skip And Finish</button> -->
+            <button  style="float:right;" ng-if="wForm.index==4" ng-click="submitSettingAndFinish();" class="btn btn-primary">Save And Finish<img class="TALLY-setting-form-submit" style="display:none;margin-left: 8px;" src="images/loader-circle-blue.GIF"></button></li>
+
+            <ul style="list-style: none;float: right;">
+                <li style="float: right;"><button ng-if="wForm.index!=4" ng-click="wForm.index=wForm.index+1;" class="btn btn-primary">Skip</button></li>
+                <!-- <li style="float: right;margin-right:10px;"><button ng-if="wForm.index!=4" ng-click="submitAndNext();" class="btn btn-primary">Save And Next<img class="" style="display:none;margin-left: 8px;" src="images/loader-circle-blue.GIF"></button></li> -->
+                <li style="float: right;margin-right:10px;"><button ng-if="wForm.index==1" ng-click="submitAndNext();" class="btn btn-primary">Save And Next<img class="FK-setting-form-submit" style="display:none;margin-left: 8px;" src="images/loader-circle-blue.GIF"></button></li>
+                <li style="float: right;margin-right:10px;"><button ng-if="wForm.index==2" ng-click="submitAndNext();" class="btn btn-primary">Save And Next<img class="AMAZON-setting-form-submit" style="display:none;margin-left: 8px;" src="images/loader-circle-blue.GIF"></button></li>
+                <li style="float: right;margin-right:10px;"><button ng-if="wForm.index==3" ng-click="submitAndNext();" class="btn btn-primary">Save And Next<img class="OTHER-setting-form-submit" style="display:none;margin-left: 8px;" src="images/loader-circle-blue.GIF"></button></li>
+            </ul>
+        </div>
+    </div>
+</div>

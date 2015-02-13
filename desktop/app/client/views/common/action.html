@@ -1,0 +1,63 @@
+<div class="bhoechie-tab-container" ng-controller="ConfigCtrl">
+    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 bhoechie-tab-menu" style="padding: 10px;">
+        <div class="list-group" ng-init="tab='flipkart-setting'" style="height: 335px;overflow: hidden;overflow-y: scroll;padding-right: 8px;">
+            <a href="" class="list-group-item active text-center" ng-class="tab=='flipkart-setting' ? 'active' : ''" ng-click="tab='flipkart-setting';">
+                <img src="images/flipkart-64x64.png">
+            </a>
+            <a href="" class="list-group-item text-center" ng-class="tab=='amazon-setting' ? 'active' : ''" ng-click="tab='amazon-setting';">
+                <img src="../../images/amazon-64x64.png">
+            </a>
+            <!--<a href="" class="list-group-item text-center" ng-class="tab=='sd-setting' ? 'active' : ''" ng-click="tab='sd-setting';">
+                <img src="images/snapdeal.png">
+            </a>-->
+            <!-- <a href="" class="list-group-item text-center" ng-class="tab=='ptm-setting' ? 'active' : ''" ng-click="tab='ptm-setting';">
+                <img src="images/paytm.png">
+            </a> -->
+            <a href="" class="list-group-item text-center" ng-class="tab=='tally-setting' ? 'active' : ''" ng-click="tab='tally-setting';">
+                <img src="images/tally.png">
+            </a>
+            <a href="" class="list-group-item text-center" ng-class="tab=='other-setting' ? 'active' : ''" ng-click="tab='other-setting';">
+                <img src="images/User.png">
+            </a>
+        </div>
+    </div>
+    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 bhoechie-tab">
+    {{loginMsg}}
+        <!-- Flipkart section -->
+        <div class="bhoechie-tab-content" ng-class="tab=='flipkart-setting' ? 'active' : ''">
+            <div ng-include="'views/setting/flipkart-setting-form.html'"></div>
+            <button ng-click="submitSetting('FK-setting-form');" class="btn btn-primary" style="margin-top: 12px;">Submit<img class="FK-setting-form-submit" style="display:none;margin-left: 8px;" src="images/loader-circle-blue.GIF"></button>
+        </div>
+
+
+        <!-- Amazon section -->
+        <div class="bhoechie-tab-content" ng-class="tab=='amazon-setting' ? 'active' : ''">
+            <div ng-include="'views/setting/amazon-setting-form.html'"></div>
+            <button ng-click="submitSetting('AMAZON-setting-form');" class="btn btn-primary" style="margin-top: 12px;">Submit<img class="AMAZON-setting-form-submit" style="display:none;margin-left: 8px;" src="images/loader-circle-blue.GIF"></button>
+        </div>
+
+        <!-- Snapdeal section -->
+        <!--<div class="bhoechie-tab-content" ng-class="tab=='sd-setting' ? 'active' : ''">
+            <div ng-include="'views/setting/SD-setting-form.html'"></div>
+            <button ng-click="submitSetting('SD-setting-form');" class="btn btn-primary" style="margin-top: 12px;">Submit<img class="SD-setting-form-submit" style="display:none;margin-left: 8px;" src="images/loader-circle-blue.GIF"></button>
+        </div>
+-->
+        <!-- PTM section -->
+        <div class="bhoechie-tab-content" ng-class="tab=='ptm-setting' ? 'active' : ''">
+            <div ng-include="'views/setting/PTM-setting-form.html'"></div>
+            <button ng-click="submitSetting('PTM-setting-form');" class="btn btn-primary" style="margin-top: 12px;">Submit<img class="PTM-setting-form-submit" style="display:none;margin-left: 8px;" src="images/loader-circle-blue.GIF"></button>
+        </div>
+
+        <!-- tally section -->
+        <div class="bhoechie-tab-content" ng-class="tab=='tally-setting' ? 'active' : ''">
+            <div ng-include="'views/setting/tally-setting-form.html'"></div>
+            <button ng-click="submitSetting('TALLY-setting-form');" class="btn btn-primary" style="margin-top: 12px;">Submit<img class="TALLY-setting-form-submit" style="display:none;margin-left: 8px;" src="images/loader-circle-blue.GIF"></button>
+        </div>
+
+        <!-- other section-->
+        <div class="bhoechie-tab-content" ng-class="tab=='other-setting' ? 'active' : ''">
+            <div ng-include="'views/setting/other-setting-form.html'"></div>
+            <button ng-click="submitSetting('OTHER-setting-form');" class="btn btn-primary" style="margin-top: 12px;">Submit<img class="OTHER-setting-form-submit" style="display:none;margin-left: 8px;" src="images/loader-circle-blue.GIF"></button>
+        </div>
+    </div>
+</div>

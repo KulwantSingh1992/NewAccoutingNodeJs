@@ -1,0 +1,22 @@
+<ENVELOPE>
+    <HEADER>	
+        <VERSION>1</VERSION>
+        <TALLYREQUEST>Export</TALLYREQUEST>
+        <TYPE>Collection</TYPE>
+        <ID>All items under Groups</ID>
+    </HEADER>
+    <BODY>
+        <DESC>
+            <STATICVARIABLES>
+                <SVCURRENTCOMPANY>{{companyName}}</SVCURRENTCOMPANY>
+                <SVEXPORTFORMAT>$$SysName:XML</SVEXPORTFORMAT>
+            </STATICVARIABLES><TDL><TDLMESSAGE>
+            <COLLECTION NAME="All items under Groups" ISMODIFY="No">
+                <TYPE>stock item</TYPE>
+                <FETCH>Name,Parent,BaseUnits,Masterid,OpeningBalance,OpeningRate,OpeningValue,ClosingBalance,ClosingRate,ClosingValue,RateOfMRP</FETCH>
+            </COLLECTION>
+            </TDLMESSAGE>
+            </TDL>
+        </DESC>
+    </BODY>
+</ENVELOPE>

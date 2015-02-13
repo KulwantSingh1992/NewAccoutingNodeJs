@@ -1,0 +1,148 @@
+<div class="row clearfix" ng-if="main.dashboard=='inv'">
+    <div class="col-md-12 column">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <span class="panel-title">
+                    <strong>Inventory</strong>
+                </span>
+                <div class="btn-group pull-right widget-header-action">
+                    <button class="btn btn-default" type="button" ng-click="main.dashboard='dashboard'"><em class="glyphicon glyphicon-home"></em> </button>
+                </div>
+                
+                
+        <div class="pull-right">
+            <form role="form" class="form-inline form-filter">
+                <div class="form-group">
+                    <select  name="filter" value="" class="form-control">
+                       <option value="0">All Channel</option>
+                       <option value="1">Amazon</option>
+                       <option value="1">Flipkart</option>
+                       <option value="2">Ebay</option>
+                       <option value="3">Snapdeal</option>
+                    </select>
+				</div>
+                <div class="form-group">
+                    <select  name="filters" value="" class="form-control">
+                       <option value="0">Brand</option>
+                       <option value="1">Apple</option>
+                       <option value="2">Samsung</option>
+                       <option value="3">HP</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <input class="form-control" type="date">
+                </div>
+               
+                <div class="form-group">
+                    <input class="form-control" type="date">
+                </div>
+            </form>
+        </div>
+                </div>
+            </div>
+            <div class="panel-body">
+                <div class="panel-group" role="tablist" aria-multiselectable="true" style="margin-bottom: 0px">
+                  <div class="panel panel-info">
+                    <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+                      <div class="panel-body">
+                        <table class="table" style="margin-bottom: 0px">
+                            <thead>
+                                <tr class="info">
+                                    <th>
+                                        Product ID
+                                    </th>
+                                    <th>
+                                        Product Name
+                                    </th>
+                                    <th>
+                                        Cost Price
+                                    </th>
+                                    <th>
+                                        MRP
+                                    </th>
+                                    <th>
+                                        Available Qty In Market
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        1BH12
+                                    </td>
+                                    <td>
+                                        Samsung Galaxy Duos
+                                    </td>
+                                    <td>
+                                       6000
+                                    </td>
+                                    <td>
+                                       7000
+                                    </td>
+                                    <td>
+                                        35
+                                    </td>
+                                </tr>
+                                  <tr>
+                                    <td>
+                                        12RT
+                                    </td>
+                                    <td>
+                                        Sony Xperia White
+                                    </td>
+                                    <td>
+                                       10000
+                                    </td>
+                                    <td>
+                                        11000
+                                    </td>
+                                    <td>
+                                        10
+                                    </td>
+                                </tr>
+                                  <tr>
+                                    <td>
+                                        12WERT
+                                    </td>
+                                    <td>
+                                        IPHONE
+                                    </td>
+                                    <td>
+                                       45000
+                                    </td>
+                                    <td>
+                                        60000
+                                    </td>
+                                    <td>
+                                        61
+                                    </td>
+                                </tr>
+                                 <tr>
+                                    <td>
+                                        1456QS
+                                    </td>
+                                    <td>
+                                        IWATCH
+                                    </td>
+                                    <td>
+                                       10000
+                                    </td>
+                                    <td>
+                                        60000
+                                    </td>
+                                    <td>
+                                        0
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+            
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

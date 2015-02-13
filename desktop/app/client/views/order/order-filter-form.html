@@ -1,0 +1,36 @@
+<form id="order-filter-form" role="form" class="form-inline form-filter">
+    <div class="form-group">
+        <select class="form-control" ng-model="orderFilterForm.arrangement" ng-change="submitOrderFilterForm();">
+            <option value="" selected disabled>Arranged By</option>
+            <option value="order">Order</option>
+            <option value="product">Product</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <select class="form-control" ng-model="orderFilterForm.status" ng-change="submitOrderFilterForm();">
+            <option value="" selected disabled class="hide">Status</option>
+            <option value="0">All</option>
+            <option value="SHIPPED">Shipped</option>
+            <option value="DUE-TODAY">Due Today</option>
+            <option value="PENDING">Pending</option>
+            <option value="CANCELLED">Cancelled</option>
+            <option value="SLA">SLA</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <select class="form-control" ng-model="orderFilterForm.channel" ng-change="submitOrderFilterForm();">
+            <option value="" selected disabled class="hide">Channel</option>
+            <option value="0">All</option>
+            <option value="FK">Flipkart</option>
+            <option value="AMAZON">Amazon</option>
+            <!--<option ng-repeat="channel in orderFilterForm.channelOptions" value="{{channel.channelName}}">{{channel.fullName}}</option>-->
+        </select>
+    </div>
+    <div ng-hide="orderFilterForm.tag=='sla' || orderFilterForm.tag=='dueToday'" class="form-group">
+        <input ng-model="orderFilterForm.startDate" class="form-control custom-datepicker" type="text" placeholder="mm/dd/yyyy" ng-change="submitOrderFilterForm();"/>
+	</div>
+
+    <div ng-hide="orderFilterForm.tag=='sla' || orderFilterForm.tag=='dueToday'" class="form-group">
+        <input ng-model="orderFilterForm.endDate" class="form-control custom-datepicker" type="text" placeholder="mm/dd/yyyy" ng-change="submitOrderFilterForm();"/>
+	</div>
+</form>

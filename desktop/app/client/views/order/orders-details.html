@@ -1,0 +1,197 @@
+<div class="row clearfix" ng-if="main.dashboard=='order'">
+    <div class="col-md-12 column">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <span class="panel-title">
+            <strong>{{orderPanel.heading}}</strong>
+          </span>
+                <div class="btn-group pull-right widget-header-action">
+                    <button class="btn btn-default" type="button" ng-click="main.dashboard='dashboard'">
+                        <em class="glyphicon glyphicon-home"></em>
+                    </button>
+                </div>
+                <div class="pull-right" ng-include="'views/order/order-filter-form.html'"></div>
+            </div>
+        </div>
+        <div class="panel-group" role="tablist" aria-multiselectable="true">
+
+            <!-- Orders sorted by product -->
+            <div ng-if="orderFilterForm.arrangement === 'product'" class="panel panel-default" ng-repeat="order in orderList" style="box-shadow: none;">
+                <div class="panel-heading" role="tab" style="color: #666;padding: 7px 15px;">
+                    <h4 class="panel-title">
+                        <a style="font-size: 12px;text-decoration: underline;" data-toggle="collapse" href="/#item-{{$index}}" aria-expanded="true" aria-controls="collapseOne">
+                            <span class="prod-name" ng-bind="order[0].product_name || order[0].name"></span>
+                        </a>
+                        <span ng-if="!order[0].product_id" style="font-size: 12px;margin-left: 70px;">(This product is not mapped)
+                            <button class="btn btn-primary" ng-click="openReverseProductMapModal(order)" style="margin-top: -3px;padding: 0px 5px;" data-toggle="modal" data-target="#reverse-product-map-modal" data-backdrop="false">Map Now</button>
+                        </span>
+                        <span class="pull-right" style="font-size: 12px;margin-top: 5px;"> Product Quantity: <sapn ng-bind="order.length"></sapn> </span>
+                    </h4>
+                </div>
+                <div id="item-{{$index}}" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+                    <div class="panel-body">
+                        <table class="table table-condensed" style="margin-bottom: 0px">
+                            <thead>
+                                <tr>
+                                    <th>Order ID</th>
+                                    <th>Channel</th>
+                                    <th>Unit Price</th>
+                                    <th>Unit Quantity</th>
+                                    <th>Order Amount</th>
+                                    <th>Status</th>
+                                    <th>Order Date</th>
+                                    <th>Order Updated</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="item in order">
+                                    <td ng-bind="item.orders_external_id.substring(0,40)" style="width: 245px;vertical-align: middle;"></td>
+                                    <td style="padding: 1px;">
+                                        <img style="height: 25px;" ng-src="images/{{item.orders_channel_id.toLowerCase()}}-order-24x24.png" />
+                                    </td>
+                                    <td ng-bind="item.unit_price" style="vertical-align: middle;"></td>
+                                    <td ng-bind="item.quantity" style="vertical-align: middle;"></td>
+                                    <td ng-bind="item.orders_grand_total" style="vertical-align: middle;"></td>
+                                    <td ng-bind="item.orders_external_status_id" style="vertical-align: middle;"></td>
+                                    <td ng-bind="item.orders_order_date | date:'MM/dd/yyyy'" style="vertical-align: middle;"></td>
+                                    <td ng-bind="item.orders_last_updated_timestamp | date:'MM/dd/yyyy'" style="vertical-align: middle;"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Orders sorted by order -->
+            <div ng-if="orderFilterForm.arrangement === 'order'" class="panel panel-default" ng-repeat="order in orderList" style="box-shadow: none;">
+                <div class="panel-heading" role="tab" style="color: #666;padding: 7px 15px;">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" href="/#{{order.orders_external_id}}" aria-expanded="true" aria-controls="collapseOne">
+                            <span style="position: absolute;">
+                                <img ng-src="images/{{order.orders_channel_id.toLowerCase()}}-order-24x24.png" style="height: 22px;margin-top: -3px;"/>
+                            </span>
+                            <span style="font-size: 12px;padding-left: 32px;text-decoration: underline;">Order Id: <span class="prod-name" style="font-size: 14px;" ng-bind="order.orders_external_id"></span></span>
+                        </a>
+                        <span style="font-size: 12px;padding-left: 10px;"> Items: <sapn style="font-size: 14px;" ng-bind="order.items.length"></sapn></span>
+                        <span style="font-size: 12px;padding-left: 10px;"> Grand Total: <sapn style="font-size: 14px;" ng-bind="order.orders_grand_total"></sapn></span>
+                    </h4>
+                </div>
+                <div id="{{order.orders_external_id}}" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+                    <div class="panel-body">
+                        <table class="table table-condensed" style="margin-bottom: 0px">
+                            <thead>
+                                <tr>
+                                    <th>Product Name</th>
+                                    <th>Quantity</th>
+                                    <th>Unit Price</th>
+                                    <th>Total</th>
+                                    <th>Status</th>
+                                    <th>Order Date</th>
+                                    <th>Order Updated</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="item in order.items">
+                                    <td style="width:30%" ng-bind="item.product_name || item.order_item_name"></td>
+                                    <td ng-bind="item.order_item_quantity"></td>
+                                    <td ng-bind="item.order_item_unit_price"></td>
+                                    <td ng-bind="item.order_item_grand_total"></td>
+                                    <td ng-bind="item.order_item_external_status"></td>
+                                    <td ng-bind="item.order_item_date | date:'MM/dd/yyyy'"></td>
+                                    <td ng-bind="item.order_item_last_updated_timestamp | date:'MM/dd/yyyy'"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="reverse-product-map-modal" class="modal fade 1bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <b>Reverse Product(s) Mapping<b>
+                    <div class="btn-group pull-right widget-header-action">
+                        <button class="btn btn-default" type="button" data-dismiss="modal">
+                            <em class="glyphicon glyphicon-remove"></em>
+                        </button>
+                    </div>
+                </div>
+                <div class="modal-body" style="min-height: 300px;">
+                    <div class="clearfix">
+                        <div class="col-md-12 column">
+                            <b style="font-size: 16px;" ng-bind="orderForMapping[0].name"></b>
+                            <ui-select ng-model="mappingForm.selectedProduct"
+                                        theme="bootstrap"
+                                        reset-search-input="true">
+                                <ui-select-match placeholder="Search from local products">{{$select.selected.name}}</ui-select-match>
+                                <ui-select-choices repeat="product in productListForMapping track by $index"
+                                            refresh="searchProductByNameForMapping($select.search)"
+                                            refresh-delay="0">
+                                <div ng-bind-html="product.name | highlight: $select.search"></div>
+                                </ui-select-choices>
+                            </ui-select>
+                            <form ng-if="mappingForm.selectedProduct.id" role="form">
+                                <div>
+                                    <div>
+                                        <table class="table table-condensed">
+                                            <thead>
+                                                <tr>
+                                                    <th>Local Product Name</th>
+                                                    <th>Mrp</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>{{mappingForm.selectedProduct.name}}</td>
+                                                    <td>
+                                                        <span ng-if="mappingForm.selectedProduct.mrp">{{mappingForm.selectedProduct.mrp}}</span>
+                                                        <input ng-if="!mappingForm.selectedProduct.mrp" ng-model="mappingForm.newMrp" class="form-control" style="width: 150px;padding: 5px;height: 25px;position:relative; " />
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div ng-repeat="channelDetails in activeChannelsForProduct">
+                                        <table class="table-condensed">
+                                            <tr data-id="product-{{channelDetails.channelName.toLowerCase()}}">
+                                                <td style="padding: 0 25px;">
+                                                    <img ng-src="images/{{channelDetails.channelName.toLowerCase()}}-order-24x24.png" style="height: 30px;" />
+                                                </td>
+                                                <td style="clear:both">
+                                                    <span>SKU</span>
+                                                    <div style="position:relative;">
+                                                        <input class="form-control" type="text" ng-model="mappingForm.selectedProduct.sku" value="{{mappingForm.selectedProduct.product_sku}}" class="form-control" style="width: 150px;padding: 5px;height: 25px;position:relative; " />
+                                                    </div>
+                                                </td>
+                                                <td style="clear:both">
+                                                    <span>Selling Price</span>
+                                                    <div style="position:relative;">
+                                                        <input class="form-control" type="text" ng-model="mappingForm.selectedProduct[channelDetails.channelName + '_listed_price']" class="form-control" style="width: 100px;padding: 5px;height: 25px;position:relative; "/>
+                                                    </div>
+                                                </td>
+                                                <td ng-repeat="item in channelDetails.config.others" class="{{channelDetails.channelName}}-channel-otherinfo">
+                                                    <div class="{{channelDetails.channelName}}-{{item.name}}-desc" style="{{item.isVisible === 'false' ? 'display:none' : 'display:block'}}">
+                                                        <span>{{item.label}}</span>
+                                                        <img src="images/tooltip.png" class="custom-tooltip" data-toggle="tooltip"   data-placement="top" title="{{item.desc}}" >
+                                                    </div>
+                                                    <div style="position:relative;">
+                                                        <input ng-if="item.inputType != 'checkbox'" type="{{item.inputType}}" ng-model="mappingForm.selectedProduct[channelDetails.channelName + '_additional_info'][item.name]" name="{{item.name}}" class="form-control" style="width: 100px;padding: 5px;height: 25px;position:relative; "/>
+                                                        <input ng-if="item.inputType == 'checkbox'" type="{{item.inputType}}" ng-model="mappingForm.selectedProduct[channelDetails.channelName + '_additional_info'][item.name]" name="{{item.name}}" class="form-control" 
+                                                        style="width: 130px;padding: 5px;height: 25px;position:relative; {{item.isVisible === 'false' ? 'display:none' : 'display:block'}}"  	ng-true-value='"{{item.enable}}"' ng-false-value='"{{item.disable}}"' />
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                        <div><button class="btn btn-primary pull-right" ng-click="updateProductsForMapping(channelDetails.channelName)">Map</button></div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

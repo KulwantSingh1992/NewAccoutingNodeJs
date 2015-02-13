@@ -1,0 +1,214 @@
+<div class="row clearfix" ng-if="main.dashboard=='selllist'" ng-controller="SellDetailsCtrl">
+    <div class="col-md-12 column">
+        <div class="panel panel-info" id="page-selection">
+            <div class="panel-heading" role="tab" id="headingOne">
+                <span class="panel-title"><span class="prod-name" style="font-weight: bold;">Sell Online</span></span>
+                <div class="btn-group pull-right widget-header-action">
+                    <ng-include src="'views/sell-online/sell-header.html'"></ng-include>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-info" ng-init="productFilterForm.status='unlisted';searchProductWithFilter();">
+            <div class="panel-heading">
+                <div class="pull-left" ng-include="'views/sell-online/product-filter-form.html'"></div>
+                <div class="pull-right" ng-if="products.length > 10 && activeChannelsConfigs.length" style="margin: -5px 10px 0 10px;" ng-include="'views/sell-online/product-pagination.html'"></div>
+            </div>
+            <div class="panel-body">
+                <table ng-if="products.length  && activeChannelsConfigs.length" class="table" style="border-bottom: 1px solid #ddd;margin-bottom: 0;">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Product Name</th>
+                            <th>Minimum Selling Price</th>
+                            <th>Quantity</th>
+                            <th>MRP</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat-start="value in values track by $index" data-id="product-row-{{value.id}}">
+                            <td style="text-align: center">
+                                <!--<i class="btn btn-default glyphicon glyphicon-plus-sign"></i>
+                                <i class="btn btn-default glyphicon glyphicon-minus-sign"></i>-->
+                            </td>
+
+                            <td ng-if="value.extra.noChannelExists"><span>{{value.name}}</span>
+                            </td>
+                            <td ng-if="value.extra.anyChannelExists" role="tab" data-toggle="collapse" href="/#sellProduct{{$index}}" aria-expanded="true">
+                                <span style="cursor: pointer;text-decoration: underline;">{{value.name}}</span>
+                            </td>
+
+                            <td>
+                                <span ng-if="value.min_price">{{value.min_price | currency:"&#8377;"}}</span>
+                                <span ng-if="!value.min_price">-</span>
+                            </td>
+
+                            <td>{{value.available_quantity || '-'}}</td>
+
+                            <td>
+                                <span ng-if="value.mrp">{{value.mrp | currency:"&#8377;"}}</span>
+                                <input type="text" ng-if="!value.mrp" ng-model="value.newMrp" name="newMrp" />
+                            </td>
+
+
+                            <td style="padding: 2px;">
+                                <button ng-click="openSellDataModal(value)" data-backdrop="false" class="btn btn-primary">Map</button>
+                            </td>
+                        </tr>
+                        <tr ng-if="value.extra.anyChannelExists" id="sellProduct{{$index}}" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="heading" style="background-color: #f9f9f9;" ng-repeat-end>
+                            <td colspan="6" style="padding: 0 8px;">
+                                <div class="marketplace-liating-from-container" ng-repeat="channelDetails in activeChannelsConfigs" ng-if="value.extra[channelDetails.marketplaceExists]">
+                                    <div ng-if="value[channelDetails.channelName + '_is_listed']" class="disabled"></div>
+                                    <table class="table-condensed">
+                                        <tr data-id="product-{{channelDetails.channelName.toLowerCase()}}-{{value.id}}">
+                                            <td style="padding: 0 25px;">
+                                                <img ng-src="images/{{channelDetails.channelName.toLowerCase()}}-order-24x24.png" style="height: 30px;" />
+                                            </td>
+                                            <td ng-repeat="item in channelDetails.config.required" style="clear:both">
+                                                <span>{{item.label}}</span>
+                                                <img src="images/tooltip.png" class="custom-tooltip" data-toggle="tooltip" data-placement="top" title="{{item.desc}}">
+                                                <div style="position:relative;">
+                                                    <input type="{{item.inputType}}" ng-model="value[channelDetails.channelName + '_' + item.name]" name="{{item.name}}" class="form-control" style="width: 110px;padding: 5px;height: 25px;  " />
+                                                    <div style="position: absolute;float: right;width: 100%;right: -109px;top: 2px;">
+                                                        <button name="{{item.name}}" class="btn btn-danger glyphicon glyphicon-exclamation-sign custom-tooltip" style="overflow: visible;  border: 0px; padding: 0px; cursor: pointer; height: 17px; width: 16px; color: rgb(255, 255, 255);font-size: 11px;position: absolute; right:113px; display:none;" data-toggle="tooltip"></button>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td ng-repeat="item in channelDetails.config.others" class="{{channelDetails.channelName}}-channel-otherinfo">
+												<div class="{{channelDetails.channelName}}-{{item.name}}-desc" style="{{item.isVisible === 'false' ? 'display:none' : 'display:block'}}">
+													<span>{{item.label}}</span>
+													<img src="images/tooltip.png" class="custom-tooltip" data-toggle="tooltip"   data-placement="top" title="{{item.desc}}" >
+												</div>
+                                                <div style="position:relative;">
+                                                    <input ng-if="item.inputType != 'checkbox'" type="{{item.inputType}}" ng-model="value[channelDetails.channelName + '_additional_info'][item.name]" name="{{item.name}}" class="form-control" style="width: 130px;padding: 5px;height: 25px;position:relative; "/>
+                                                    <input ng-if="item.inputType == 'checkbox'" type="{{item.inputType}}" ng-model="value[channelDetails.channelName + '_additional_info'][item.name]" name="{{item.name}}" class="form-control" 
+													style="width: 130px;padding: 5px;height: 25px;position:relative; {{item.isVisible === 'false' ? 'display:none' : 'display:block'}}"  	ng-true-value='"{{item.enable}}"' ng-false-value='"{{item.disable}}"' />
+                                                    <div style="position: absolute;float: right;width: 100%;right: -109px;top: 2px;">
+                                                        <button name="{{item.name}}" class="btn btn-danger glyphicon glyphicon-exclamation-sign custom-tooltip" style="overflow:visible; border:0px; padding:0px; cursor: pointer; height:17px; width:16px; color:rgb(255, 255, 255); font-size: 11px; position:absolute; right:113px; display:none;" data-toggle="tooltip"></button>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td  class="action btn-group list-product-btn">
+                                                <button ng-if="!value[channelDetails.channelName + '_is_listed']" ng-click="listSellData(value, channelDetails.channelName)" class="btn btn-default" data-id="product-{{value.id}}-{{channelDetails.channelName}}-button" style="border-radius: 0;float: left;position: absolute; left: -55px;">List</button>
+                                                <button ng-if="value[channelDetails.channelName + '_is_listed']" class="btn btn-default" style="border-radius: 0;" disabled>Listed</button>
+                                                <button type="button" class="btn btn-danger glyphicon glyphicon-exclamation-sign" id="{{channelDetails.channelName}}_channel_response_danger" data-container="body" data-toggle="popover" data-placement="left" style="overflow: visible; cursor: pointer; color: rgb(255, 255, 255);display:none"></button>
+                                                <button class="btn btn-success glyphicon glyphicon-ok" style="margin-top: -1px;display: none;border-radius: 0;"></button>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div ng-if="!products.length && activeChannelsConfigs.length" style="font-size: 18px;padding: 10px;">No products found...</div>
+                <div ng-if="!activeChannelsConfigs.length" style="font-size: 18px;padding: 10px;">No Channel Configured, Please configure channel to start listing</div>
+                <div class="pull-right" ng-if="products.length > 10 && activeChannelsConfigs.length" style="margin: 20px;" ng-include="'views/sell-online/product-pagination.html'"></div>
+            </div>
+        </div>
+    </div>
+    <div id="selldatamodal" class="modal fade 1bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <b>Map Product(s)<b>
+                    <div class="btn-group pull-right widget-header-action">
+                        <button class="btn btn-default" type="button" data-dismiss="modal">
+                            <em class="glyphicon glyphicon-remove"></em>
+                        </button>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <!--<input ng-enter="searchProductByNameForMapping()" ng-model="productsFilterFormForMapping.name" class="form-control" type="text" placeholder="Search Products" style="width:20%;" />-->
+                    <form id="map-product-form" role="form">
+                        <table class="table">
+                            <tr>
+                                <th>&nbsp;</th>
+                                <th>Product SKU</th>
+                                <th ng-repeat="channelDetails in activeChannelsConfigs">{{channelDetails.fullName}} Serial No</th>
+                            </tr>
+                            <tr ng-repeat="item in productsForMapping" data-id="product-map-{{item.id}}">
+                                <th>{{item.name}}</th>
+                                <th>
+                                    <input id="map-form-product-sku" class="form-control" type="text" name="sku-input-{{item.id}}" ng-model="tempProduct.sku" value="tempProduct.sku" />
+                                </th>
+                                <th ng-repeat="channelDetails in activeChannelsConfigs">
+                                    <input class="form-control" id="{{channelDetails.marketplaceName}}-sku-id" type="text" ng-model="item[channelDetails.marketplaceID]" value="{{item[channelDetails.marketplaceID]}}" name="channelId" />
+									<p><a href="#" ng-click="searchProductOnChannel(item.name,'atag', '{{channelDetails.marketplaceName}}');" data-toggle="modal" data-target=".bs-example-modal-lgClick">Search on marketplace</a></p>
+                                </th>
+                            </tr>
+                        </table>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <!-- data-dismiss="modal" -->
+                    <button class="btn btn-primary pull-right" ng-click="updateProductsForMapping()">Save</button>
+                    <button class="btn btn-danger pull-right" data-dismiss="modal" style="margin-right: 5px">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+<div class="modal fade bs-example-modal-lgClick" tabindex="-1" role="dialog" id="searchOnChannelModal" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+       <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"  ng-click="closeSearchOnChannelModal()"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Product Search </h4>
+      </div>
+      <div class="modal-body">
+			<div class="col-md-12 form-horizontal">
+				<div class="form-group">
+					<span class="col-md-2 control-label">Search</span>
+					<div class="col-md-5">
+						<input type="text" value="{{searchQuery}}" id="product-search-field" class="form-control">
+					</div>
+					<input type="hidden" id="product-search-markeplaceId" value="{{productSearchMarkeplaceId}}">
+					<button type="button" class="btn btn-primary" ng-click="searchProductOnChannel('noQuery','search', null)" style="margin-left:10%;">Search</button>
+				</div>
+			</div>
+		
+		<div style="height: 350px;overflow-x: hidden;overflow-y: scroll;width: 100%;">
+
+		<table class="table table-responsive">
+			
+			<tr ng-if="productSearchMarkeplaceId === 'FK'" style="border-bottom: 1px solid #ddd;margin-bottom: 0;" ng-repeat="value in listProduct.productDetails">
+				<td><img class="img-thumbnail" src="{{value.productImage}}" style="max-width: 120px; max-height: 75px;"></td>
+				<td>
+					<p class="marging-zero">{{value.title}}</p>
+					<p class="marging-zero">
+						<span style="margin-right:10px;"><strong style="font-size:14px;font-weight:bold;margin-right:5px;">Color :</strong>{{value.attributes.Color}} </span>						
+					</p>
+					<p class="marging-zero"><strong style="font-size:14px;font-weight:bold;margin-right:5px;"> Flipkart Serial No(FSN) :</strong> {{value.fsn}}</p>
+				</td>
+				<td ng-if="value.isDisabled == true && value.stockFileDetails.isExisting == true || value.isDisabled == true && value.stockFileDetails.isExisting == false"><p>You Cannot List This Product</p></td>
+				<td ng-if="value.isDisabled == false && value.stockFileDetails.isExisting == true"><p>Already listed</p></td>
+				<td ng-if="value.isDisabled == false && value.stockFileDetails.isExisting == false"><button ng-click="setMarketPlaceSerialNo(value.fsn)" class="btn btn-primary">Add</button></td>
+			</tr>
+			<tr ng-if="productSearchMarkeplaceId == 'AMAZON'" style="border-bottom: 1px solid #ddd;margin-bottom: 0;" ng-repeat="value in listProduct">
+				<td><img class="img-thumbnail" src="{{value.productImage}}" style="max-width: 120px; max-height: 75px;"></td>
+				<td>
+					<p class="marging-zero">{{value.title}}</p>
+					<p class="marging-zero">
+						<span style="margin-right:10px;"><strong style="font-size:14px;font-weight:bold;margin-right:5px;">Color :</strong>{{value.color}} </span>						
+					</p>
+					<p class="marging-zero"><strong style="font-size:14px;font-weight:bold;margin-right:5px;"> Amazon Serial No(ASIN) :</strong> {{value.asin}}</p>
+				</td>
+				<td><button ng-click="setMarketPlaceSerialNo(value.asin)" class="btn btn-primary">Add</button></td>
+			</tr>
+		</table>
+		</div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger"  ng-click="closeSearchOnChannelModal()">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+	
+	
+	
+	
+	
+</div>

@@ -1,0 +1,65 @@
+<div ng-controller="RevenueChartCtrl" ng-init="panel={};panel.close=1;panel.body=1" ng-show="panel.close" class="panel panel-info" ng-model="widgetList" data-drag="true" data-jqyoui-options="{revert: 'invalid'}" jqyoui-draggable="{index: {{$index}},placeholder:true}">
+    <div class="panel-heading">
+        <span class="panel-title">
+Cost vs Sales
+</span>
+        <div class="btn-group pull-right widget-header-action">
+            <div class="btn-group">
+                <a data-toggle="dropdown" data-hover="dropdown" data-delay="200" data-close-others="false" class="glyphicon glyphicon-cog dropdown-toggle" style="cursor: pointer;font-size: 20px;padding:4px;text-decoration:none;color:#333;"></a>
+                <ul class="dropdown-menu dropdown-menu-right" role="menu" style="cursor: pointer;">
+                    <li ng-click="panel.body=!panel.body" class="dashboarddropdown">
+                        <em ng-if="!panel.body" class="glyphicon glyphicon-chevron-down" title="Show"></em><span ng-if="!panel.body"> Show</span>
+                        <em ng-if="panel.body" class="glyphicon glyphicon-chevron-up" title="Hide"></em><span ng-if="panel.body"> Hide</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="panel-body" ng-if="panel.body" ng-init="revenueChart('costSaleChart')">
+        <figure style="height:160px;" id="costSaleChart" ng-dblclick="revenueChart('bigCostSaleChart');"></figure>
+    </div>
+    <!-- Modal Bar Chart -->
+    <div id="barChartModal" data-backdrop="static" data-keyboard="false" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <b>Cost vs Sales</b>
+                    <div class="btn-group pull-right widget-header-action">
+                        <button class="btn btn-default" type="button" data-dismiss="modal" ng-click="revenueChart('costSaleChart')">
+                            <em class="glyphicon glyphicon-remove"></em>
+                        </button>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="panel-body">
+                        <div class="panel-group" role="tablist" aria-multiselectable="true" style="margin-bottom: 0px">
+                            <div class="panel panel-info">
+                                <div class="panel-heading" role="tab" id="headingOne">
+                                    <h4 class="panel-title">
+<a data-toggle="collapse" href="/#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+&nbsp;
+</a>
+</h4>
+                                    <div class="pull-right" style="margin-top:-19px;">
+                                        <form role="form" class="form-inline form-filter">
+                                            <div class="form-group">
+                                                <div class="daterange costSaleRange pull-right" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc">
+                                                    <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
+                                                    <span></span> <b class="caret"></b>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                                <figure id="bigCostSaleChart"></figure>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    &nbsp;
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

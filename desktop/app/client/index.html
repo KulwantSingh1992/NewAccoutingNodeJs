@@ -1,0 +1,611 @@
+<!doctype html>
+<html class="no-js" ng-app="paxcomTerminalApp" ng-csp>
+  <head>
+    <meta charset="utf-8"/>
+    <title>Paxcom</title>
+    <meta name="description" content=""/>
+    <meta name="viewport" content="width=device-width"/>
+    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+    <!-- build:css(.) styles/vendor.css -->
+    <!-- bower:css -->
+    <link rel="stylesheet" href="lib/vendor.css" />
+    <link rel="stylesheet" href="lib/datepicker/daterangepicker.css" />
+    <link rel="stylesheet" href="lib/select/select.css" />
+    <link rel="stylesheet" href="lib/angular-growl/angular-growl.min.css" />
+    <!-- endbower -->
+    <!-- endbuild -->
+    <!-- build:css(.tmp) styles/main.css -->
+    <link rel="stylesheet" href="styles/main.css"/>
+    <link rel="stylesheet" href="styles/slide-menu.css"/>
+      
+    <!-- endbuild -->
+  </head>
+  <body ng-controller="MainCtrl">
+      
+    <div id="showNetworkStatus">
+        No Internet connection detected, disabled features will be re-enabled when a connection is detected.
+    </div>
+      
+    <!-- /slide menu left -->
+    <nav class="menu slide-menu-left" id="slideMenu">
+        <ul>
+            <li ng-click="main.dashboard='dashboard';clickDashboardSync();"><a href="#" style="margin-right: 43px;position:relative;">
+                <span class="glyphicon glyphicon-home"></span> Dashboard</a>
+            </li>
+            <li class="collapsable" data-toggle="collapse" data-target="#products">
+                <a href="#" style="margin-right: 43px;"><span class="glyphicon glyphicon-shopping-cart "></span> Sell Online</a>
+            </li>
+                <ul class="sub-menu collapse" id="products" style="background-color:rgb(247, 247, 247);">
+                    <li ng-click="main.dashboard='selllist';"><a href="#" style="margin-right: 17px;">List Products</a></li>
+                    <li ng-click="main.dashboard='sell';"><a href="#" style="margin-right: 31px;"> Quick Sell</a></li>
+                </ul>
+			<li class="collapsable" data-toggle="collapse" data-target="#database-backup">
+                <a href="#"><span class="glyphicon glyphicon-hdd"></span> Database</a>
+            </li>
+			<li ng-click="main.dashboard='importsheet';"><a href="#">
+                <span class="glyphicon glyphicon-refresh"></span> Import Sheet</a>
+            </li>
+			<li ng-click="main.dashboard='viewsheet';"><a href="#">
+                <span class="glyphicon glyphicon-refresh"></span> View Sheet</a>
+            </li>
+                <ul class="sub-menu collapse" id="database-backup" style="background-color:rgb(247, 247, 247);">
+                    <li ng-click=""><a href="/database/backup"> Backup</a>
+					</li>
+                </ul>
+            <li ng-click="logout();"><a href="#">	
+                <span class="glyphicon glyphicon-off"></span> Logout</a>
+            </li>
+            <li ng-click="checkNewVersion();"><a href="#">
+                <span class="glyphicon glyphicon-refresh"></span> Check for Updates</a>
+            </li> 
+			
+        </ul>
+    </nav>
+    <!-- /slide menu left -->
+      
+    <!--[if lt IE 7]>
+      <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
+
+    <!-- Add your site or application content here -->
+    <div class="container">
+<!--        <div class="header" ng-if="session.isAuthenticated && main.dashboard!='wizard'" ng-include="'views/header.html'"></div>-->
+        <div ng-if="session.isAuthenticated && main.dashboard!='wizard'" class="container navbar-fixed-top" style="background: #FFF;height: 45px;">
+            <div class="header" ng-include="'views/header.html'"></div>
+        </div>
+
+        <div id="desktopData" ng-include="'main.html'" ng-if="session.isAuthenticated && main.dashboard!='wizard'" ng-controller="DesktopCtrl" style="padding-top: 15px;box-shadow: inset 0px 4px 3px -3px #ccc;"></div>
+
+        <div ng-include="'views/login.html'" ng-if="!session.isAuthenticated" ng-controller="LoginCtrl" style="margin: 13% 0;text-align: center;"></div>
+
+        <div ng-if="session.isAuthenticated && main.dashboard=='wizard'" ng-include="'views/wizard.html'" style="margin-top: 10px;text-align: center;"></div>
+
+        <div class="footer"><p class="pull-right">© 2015 Paxcel Technologies Pvt Ltd. All rights reserved.</p></div>
+    </div>
+      
+    <div class="ex-tooltip"></div>
+      
+    <div id="loader">
+        <img src="images/720.GIF" alt="Loading..." style="top: 50%;position: fixed;">
+    </div>
+      
+    <!--<div id="splashScreen">
+        <img src="images/splashscreen.jpg" alt="Loading..." style="top:25%;left:25%;right:25%;bottom:25%;position: fixed;">
+    </div>-->
+      
+    <div growl></div>
+      
+    <!--<div class="app-overlay"></div>-->
+
+    <!-- build:js(.) scripts/oldieshim.js -->
+    <!--[if lt IE 9]>
+    <script src="bower_components/es5-shim/es5-shim.js"></script>
+    <script src="bower_components/json3/lib/json3.js"></script>
+    <![endif]-->
+    <!-- endbuild -->
+
+    <!-- build:js(.) scripts/vendor.js -->
+    <!-- bower:js -->
+    <script src="lib/vendor.js"></script>
+    <script src="lib/charts/d3.min.js"></script>
+    <script src="lib/datepicker/moment.js"></script>
+    <script src="lib/datepicker/daterangepicker.js"></script>
+    <script src="lib/smart-table.debug.js"></script>
+    <script src="lib/angular-growl/angular-growl.min.js"></script>
+    <script src="lib/ui-bootstrap-tpls-0.12.0.min.js"></script>
+    <script src="lib/select/select.js"></script>
+      
+    <!-- endbower -->
+    <!-- endbuild -->
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+			$(document).on('click', ".prevent-hide", function(e) {
+				e.stopPropagation();
+			});
+            
+            var int = setInterval(function(){
+                var condition = navigator.onLine;
+                if(!condition){
+                    $('.navbar-fixed-top').css({'top':'30px'});
+                    $('#showNetworkStatus').css({'display':'block','margin-top':'0px'});
+                    $('#desktopData').css({'margin-top':'80px'});
+                    $('#slideMenu').css({'top':'75px'});
+                }else {
+                    $('.navbar-fixed-top').css({'top':'0px'});
+                    $('#showNetworkStatus').css({'display':'none','margin-top':'-30px'});
+                    $('#desktopData').css({'margin-top':'45px'});
+                    $('#slideMenu').css({'top':'45px'});
+                }
+            },10);
+        });
+    </script>
+    
+    <!-- build:js({.tmp,app}) scripts/scripts.js -->
+    <script src="scripts/configuration.js"></script>
+    <script src="scripts/app.js"></script>
+    <script src="scripts/directive/directives.js"></script>
+    <script src="scripts/controllers/main.js"></script>
+    <script src="scripts/controllers/config.js"></script>
+    <script src="scripts/controllers/login.js"></script>
+    <script src="scripts/controllers/header.js"></script>
+    <script src="scripts/controllers/desktop.js"></script>
+    <script src="scripts/controllers/sell-details.js"></script>
+    <script src="scripts/controllers/graph/salesChart.js"></script>
+    <script src="scripts/controllers/graph/revenueChart.js"></script>
+    <script src="scripts/controllers/graph/topOrderChart.js"></script>
+    <script src="scripts/services/notificationservice.js"></script>
+    <script src="scripts/services/order/orderservice.js"></script>
+    <script src="scripts/services/accounting/accountingservice.js"></script>
+    <script src="scripts/services/inventory/inventoryservice.js"></script>
+    <script src="scripts/services/config/configService.js"></script>
+    <script src="scripts/services/desktopservice.js"></script>
+    <script src="scripts/services/sessionservice.js"></script>
+    <!-- endbuild -->
+
+    <script type="text/ng-template" id="main.html">
+      <div>
+        <div class="row clearfix"></div>
+        <div ng-if="main.dashboard=='dashboard'" class="dashboard">
+          <div class="row clearfix">
+            <div ng-repeat="item in widgetList" class="col-md-6 column" ng-model='widgetList' data-drop="true" jqyoui-droppable="{index: {{$index}}, onDrop:'dropCallback(item, $index)'}">
+              <div ng-include="item.url" class="custom-widget"></div>
+            </div>
+            <div class="col-md-12 column" ng-include="'views/dashboard/charts/top-order-widget.html'"></div>
+          </div>
+        </div>
+		<div ng-include="'views/sell-online/selldatalist.html'"></div>
+		<div ng-include="'views/sell-online/sell.html'"></div>
+		<div ng-include="'views/setting/import-sheet.html'"></div>
+		<div ng-include="'views/setting/view-sheet.html'"></div>
+		<div ng-include="'views/order/orders-details.html'"></div>
+        <div ng-include="'sale-coach-details.html'"></div>
+      </div>
+    </script>
+
+    <script type="text/ng-template" id="order-widget.html">
+      <div ng-init="panel={};panel.close=1;panel.body=1" ng-show="panel.close" class="panel panel-info" ng-model="widgetList" data-drag="true" data-jqyoui-options="{revert: 'invalid'}" jqyoui-draggable="{index: {{$index}},placeholder:true}">
+        <div class="panel-heading">
+          <span class="panel-title">
+            Order
+          </span>
+              <div class="btn-group pull-right widget-header-action">
+            <div class="btn-group">
+            <a data-toggle="dropdown" data-hover="dropdown" data-delay="200" data-close-others="false" class="glyphicon glyphicon-cog dropdown-toggle" style="font-size:20px;padding:4px;text-decoration:none;color:#333;cursor: pointer;" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="true"></a>
+            <ul class="dropdown-menu dropdown-menu-right" role="menu" style="cursor: pointer;">
+                    <li  ng-click="panel.body=!panel.body" class="dashboarddropdown" >
+                      <em ng-if="!panel.body" class="glyphicon glyphicon-chevron-down" title="Show"></em><span ng-if="!panel.body"> Show</span>
+                      <em ng-if="panel.body" class="glyphicon glyphicon-chevron-up" title="Hide"></em><span ng-if="panel.body"> Hide</span>
+                    </li>
+                    <li  ng-click="orderFilterForm.status='';getOrders();" class="dashboarddropdown">
+                      <em class="glyphicon glyphicon-zoom-in" title="Expand"></em><span> Expand</span>
+                    </li>
+            </ul>
+           </div>
+            </div>
+		</div>
+        <div class="panel-body" ng-if="panel.body">
+          	<div class="row clearfix">
+                <div class="col-md-12 column widget-item-box">
+                    <div class="clearfix">
+                        <div class="col-md-6 column" ng-click="orderFilterForm.status='SLA';getOrders();">
+                            <span class="title">SLA Breached</span>
+                            <span ng-if="desktopObject.dashboaddetails.order.STATUS=='NOT_INIT'" class="value">
+                                <img src="images/loader-circle.GIF" alt="loading..."/>
+                            </span>
+                            <span ng-if="!desktopObject.dashboaddetails.order.STATUS" class="value">{{desktopObject.dashboaddetails.order.sla.TOTAL.toString() || '0'}}</span>
+                        </div>
+                        <div class="col-md-6 column" ng-click="orderFilterForm.status='DUE-TODAY';getOrders();">
+                            <span class="title">Due Today</span>
+                            <span ng-if="desktopObject.dashboaddetails.order.STATUS=='NOT_INIT'" class="value">
+                                <img src="images/loader-circle.GIF" alt="loading..." style="height: 18px;"/>
+                            </span>
+                            <span ng-if="!desktopObject.dashboaddetails.order.STATUS" class="value">{{desktopObject.dashboaddetails.order.dueToday.TOTAL.toString() || '0'}}</span>
+                        </div>
+                    </div>                 
+                    <div class="clearfix">
+                        <div class="col-md-6 column" ng-click="orderFilterForm.status='CANCELLED';getOrders();">
+                            <span class="title">Cancelled</span>
+                            <span ng-if="desktopObject.dashboaddetails.order.STATUS=='NOT_INIT'" class="value">
+                                <img src="images/loader-circle.GIF" alt="loading..." style="height: 18px;"/>
+                            </span>
+                            <span ng-if="!desktopObject.dashboaddetails.order.STATUS" class="value">{{desktopObject.dashboaddetails.order.cancelled.TOTAL.toString() || '0'}}</span>
+                        </div>
+                        <div class="col-md-6 column" ng-click="orderFilterForm.status='PENDING';getOrders();">
+                            <span class="title">Total Pending</span>
+                            <span ng-if="desktopObject.dashboaddetails.order.STATUS=='NOT_INIT'" class="value">
+                                <img src="images/loader-circle.GIF" alt="loading..."/>
+                            </span>
+                            <span ng-if="!desktopObject.dashboaddetails.order.STATUS" class="value">{{desktopObject.dashboaddetails.order.pending.TOTAL.toString() || '0'}}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+          
+        </div>
+      </div>
+
+    </script>
+
+    <script type="text/ng-template" id="accounting-widget.html">
+      <div ng-init="panel={};panel.close=1;panel.body=1" ng-show="panel.close" class="panel panel-info" ng-model="widgetList" data-drag="true" data-jqyoui-options="{revert: 'invalid'}" jqyoui-draggable="{index: {{$index}},placeholder:true}">
+        <div class="panel-heading">
+          <span class="panel-title">
+            Accounting
+          </span>
+          <div class="btn-group pull-right widget-header-action">
+            <div class="btn-group">
+            <a data-toggle="dropdown" data-hover="dropdown" data-delay="200" data-close-others="false" class="glyphicon glyphicon-cog dropdown-toggle" style="font-size:20px;padding:4px;text-decoration:none;color:#333;cursor: pointer;" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="true"></a>
+            <ul class="dropdown-menu dropdown-menu-right" role="menu" style="cursor: pointer;">
+                    <li  ng-click="panel.body=!panel.body" class="dashboarddropdown" >
+                      <em ng-if="!panel.body" class="glyphicon glyphicon-chevron-down" title="Show"></em><span ng-if="!panel.body"> Show</span>
+                      <em ng-if="panel.body" class="glyphicon glyphicon-chevron-up" title="Hide"></em><span ng-if="panel.body"> Hide</span>
+                    </li>
+            </ul>
+           </div>
+            </div>
+        </div>
+        <div class="panel-body" ng-if="panel.body">
+          	<div class="row clearfix">
+                <div class="col-md-12 column widget-item-box full-line disabled">
+                    <div class="clearfix">
+                        <div class="col-md-12 column">
+                            <span class="title">Cash in Bank</span>
+                            <span ng-if="desktopObject.dashboaddetails.account.STATUS=='NOT_INIT'" class="value">
+                                <img src="images/loader-circle.GIF" alt="loading..." style="margin-top: -5px;" />
+                            </span>
+                            <span ng-if="desktopObject.dashboaddetails.account.STATUS=='ERROR'" class="value" style="color:red;"> - </span>
+							<span class="value">{{desktopObject.dashboaddetails.account.cib | currency:"&#8377;"}}</span>
+                        </div>
+                    </div>
+                    <div class="clearfix">
+                        <div class="col-md-12 column">
+                            <span class="title">Total Receivables</span>
+                            <span ng-if="desktopObject.dashboaddetails.account.STATUS=='NOT_INIT'" class="value">
+                                <img src="images/loader-circle.GIF" alt="loading..." style="margin-top: -5px;"/>
+                            </span>
+                            <span ng-if="desktopObject.dashboaddetails.account.STATUS=='ERROR'" class="value" style="color:red;"> - </span>
+							<span class="value">{{desktopObject.dashboaddetails.account.receivable | currency:"&#8377;"}}</span>
+                        </div>
+                    </div>
+                    <div class="clearfix">
+                        <div class="col-md-12 column">
+                            <span class="title">Total Payables</span>
+                            <span ng-if="desktopObject.dashboaddetails.account.STATUS=='NOT_INIT'" class="value">
+                                <img src="images/loader-circle.GIF" alt="loading..." style="margin-top: -5px;"/>
+                            </span>
+							<span ng-if="desktopObject.dashboaddetails.account.STATUS=='ERROR'" class="value" style="color:red;"> - </span>
+                            <span class="value">{{desktopObject.dashboaddetails.account.payable | currency:"&#8377;"}}</span>
+                        </div>
+                    </div>
+                    <div class="clearfix">
+                        <div class="col-md-12 column">
+                            <span class="title">Inventory Value</span>
+                            <span ng-if="desktopObject.dashboaddetails.account.STATUS=='NOT_INIT'" class="value">
+                                <img src="images/loader-circle.GIF" alt="loading..." style="margin-top: -5px;"/>
+                            </span>
+							<span ng-if="desktopObject.dashboaddetails.account.STATUS=='ERROR'" class="value" style="color:red;"> - </span>
+                            <span class="value">{{desktopObject.dashboaddetails.account.inventoryValue | currency:"&#8377;"}}</span>
+                        </div>
+                    </div>
+                    <!--<div class="clearfix">
+                        <div class="col-md-12 column">
+                            <span class="title">Aging Product</span>
+                            <span ng-if="desktopObject.dashboaddetails.account.STATUS=='NOT_INIT'" class="value">
+                                <img src="images/loader-circle.GIF" alt="loading..." style="margin-top: -5px;"/>
+                            </span>
+                            <span class="value" ng-if="desktopObject.dashboaddetails.account.inventoryValue">6</span>
+                        </div>
+                    </div>-->
+                </div>
+            </div>
+			</div>
+		  </div>
+	</script>
+    <script type="text/ng-template" id="inventory-widget.html">
+      <div ng-init="panel={};panel.close=1;panel.body=1" ng-show="panel.close" class="panel panel-info" ng-model="widgetList" data-drag="true" data-jqyoui-options="{revert: 'invalid'}" jqyoui-draggable="{index: {{$index}},placeholder:true}">
+        <div class="panel-heading">
+          <span class="panel-title">
+            Inventory
+          </span>
+          <div class="btn-group pull-right widget-header-action">
+            <a data-toggle="dropdown" data-hover="dropdown" data-delay="200" data-close-others="false" class="glyphicon glyphicon-cog dropdown-toggle" style="cursor: pointer;font-size: 20px;padding:4px;text-decoration:none;color:#333;"></a>
+				<div class="dropdown-menu dropdown-menu-right prevent-hide">
+					<button class="btn btn-default" type="button" ng-click="panel.body=!panel.body" >
+					  <em ng-if="!panel.body" class="glyphicon glyphicon-chevron-down" title="Show"></em><span ng-if="!panel.body"> Show</span>
+					  <em ng-if="panel.body" class="glyphicon glyphicon-chevron-up" title="Hide"></em><span ng-if="panel.body"> Hide</span>
+					</button>
+					
+					<button type="button" class="btn btn-default" ng-click="getInventory();"><!-- ng-click="main.dashboard='inv';" -->
+					  <em class="glyphicon glyphicon-zoom-in" title="Zoom"></em><span> Zoom</span>
+					  </button>
+					  <button class="btn btn-default" type="button" ng-click="panel.close=0;">
+						<em class="glyphicon glyphicon-remove" title="Close"></em><span> Close</span>
+					  </button> 
+				 </div>
+            </div>
+        </div>
+        <div class="panel-body" ng-if="panel.body">
+          <div class="row clearfix">
+                <div class="col-md-12 column widget-item-box">
+                    <div class="clearfix">
+                        <div class="col-md-6 column">
+                            <span class="title">Out of Stock</span>
+                            <span class="value">5</span>
+                        </div>
+                        <div class="col-md-6 column">
+                            <span class="title">Below Threshold</span>
+                            <span class="value">3</span>
+                        </div>
+                    </div>
+                    <div class="clearfix">
+                        <div class="col-md-6 column">
+                            <span class="title">Aging Product</span>
+                            <span class="value">6</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+          
+        </div>
+      </div>
+
+
+    </script>
+    <script type="text/ng-template" id="sale-coach-widget.html">
+      <div ng-init="panel={};panel.close=1;panel.body=1" ng-show="panel.close" class="panel panel-info" ng-model="widgetList" data-drag="true" data-jqyoui-options="{revert: 'invalid'}" jqyoui-draggable="{index: {{$index}},placeholder:true}">
+        <div class="panel-heading">
+          <span class="panel-title">
+            Sales Coach
+          </span>
+         <div class="btn-group pull-right widget-header-action">
+            <div class="btn-group">
+            <a data-toggle="dropdown" data-hover="dropdown" data-delay="200" data-close-others="false" class="glyphicon glyphicon-cog dropdown-toggle" style="font-size:20px;padding:4px;text-decoration:none;color:#333;cursor: pointer;" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="true"></a>
+            <ul class="dropdown-menu dropdown-menu-right" role="menu" style="cursor: pointer;">
+                    <li  ng-click="panel.body=!panel.body" class="dashboarddropdown" >
+                      <em ng-if="!panel.body" class="glyphicon glyphicon-chevron-down" title="Show"></em><span ng-if="!panel.body"> Show</span>
+                      <em ng-if="panel.body" class="glyphicon glyphicon-chevron-up" title="Hide"></em><span ng-if="panel.body"> Hide</span>
+                    </li>
+                    <li  ng-click="panel.close=0;" class="dashboarddropdown">
+                        <em  class="glyphicon glyphicon-remove" title="Close"></em><span> Close</span>
+                    </li>
+            </ul>
+           </div>
+            </div>
+        </div>
+        <div class="panel-body" ng-if="panel.body">
+          <div class="row clearfix">
+                <div class="col-md-12 column widget-item-box">
+                    <div class="clearfix">
+                        <div class="col-md-6 column">
+                            <span class="title">Buy Box On Products</span>
+                           <span class="value"><span><img src="images/flipkart-16x16.png">(36)</span><span><img src="images/amazon-16x16.png">(14)</span></span>
+                        </div>
+                        <div class="col-md-6 column">
+                            <span class="title">Total Listing</span>
+                            <span class="value"><span><img src="images/flipkart-16x16.png">(372)</span><span><img src="images/amazon-16x16.png">(236)</span></span>
+                        </div>
+                    </div>
+                    <div class="clearfix">
+                        <div class="col-md-6 column">
+                            <span class="title">Out Of Stock</span>
+                            <span class="value"><span><img src="images/flipkart-16x16.png">(26)</span><span><img src="images/amazon-16x16.png">(23)</span></span>
+                        </div>
+                        <div class="col-md-6 column">
+                            <span class="title">Active Listing</span>
+                            <span class="value"><span><img src="images/flipkart-16x16.png">(120)</span><span><img src="images/amazon-16x16.png">(84)</span></span>
+                        </div>
+                    </div>
+                    <!--<div class="clearfix">
+                        <div class="col-md-6 column">
+                            <span class="title">Second Lowest Price</span>
+                            <span class="value">1580</span>
+                        </div>
+                        <div class="col-md-6 column">
+                            <span class="title">Product Listing</span>
+                            <span class="value">98</span>
+                        </div>
+                    </div>-->
+                </div>
+            </div>
+          
+        </div>
+      </div>
+  </script>
+    
+	<script type="text/ng-template" id="sale-coach-details.html">
+      <div class="row clearfix" ng-if="main.dashboard=='salecoach'">
+        <div class="col-md-12 column">
+          <div class="panel panel-info">
+            <div class="panel-heading">
+              <span class="panel-title">
+                <strong>Sales Coach</strong>
+              </span>
+              <div class="btn-group pull-right widget-header-action">
+                <button class="btn btn-default" type="button" ng-click="main.dashboard='dashboard'">
+                  <em class="glyphicon glyphicon-home"></em>
+                </button>
+              </div>
+
+
+              <div class="pull-right">
+                <form role="form" class="form-inline form-filter">
+                  <div class="form-group">
+                    <select  name="filter" value="" class="form-control">
+                      <option value="0">All Channel</option>
+                      <option value="1">Amazon</option>
+                      <option value="1">Flipkart</option>
+                      <option value="2">Ebay</option>
+                      <option value="3">Snapdeal</option>
+                    </select>
+					<i class="shift-caret caret"></i>
+                  </div>
+                  <div class="form-group">
+                    <select  name="filters" value="" class="form-control">
+                      <option value="0">Brand</option>
+                      <option value="1">Apple</option>
+                      <option value="2">Samsung</option>
+                      <option value="3">HP</option>
+                    </select>
+					<i class="shift-caret caret"></i>
+                  </div>
+
+                  <div class="form-group">
+                    <input class="form-control custom-datepicker" type="text" placeholder="mm/dd/yyyy"/>
+					<i class="shift-calendar glyphicon glyphicon-calendar"></i>
+                </div>
+
+                  <div class="form-group">
+                    <input class="form-control custom-datepicker" type="text" placeholder="mm/dd/yyyy"/>
+					<i class="shift-calendar glyphicon glyphicon-calendar"></i>
+                </div>
+                </form>
+              </div
+                </div>
+                </div>
+          </div>
+          <div class="panel-body">
+            <div class="panel-group" role="tablist" aria-multiselectable="true" style="margin-bottom: 0px">
+              <div class="panel panel-info">
+                <div class="panel-heading" role="tab" id="headingOne">
+                  <h4 class="panel-title">
+                    <a data-toggle="collapse" href="/#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                      Products
+                    </a>
+                  </h4>
+                </div>
+                <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+                  <div class="panel-body">
+                    <table class="table" style="margin-bottom: 0px">
+                      <thead>
+                        <tr>
+                          <th>
+                            Product ID
+                          </th>
+                          <th>
+                            Product Name
+                          </th>
+                          <th>
+                            Cost Price
+                          </th>
+                          <th>
+                            MRP
+                          </th>
+                          <th>
+                            Available Qty In Market
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>
+                            1BH12
+                          </td>
+                          <td>
+                            Samsung Galaxy Duos
+                          </td>
+                          <td>
+                            6000
+                          </td>
+                          <td>
+                            7000
+                          </td>
+                          <td>
+                            35
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            12RT
+                          </td>
+                          <td>
+                            Sony Xperia White
+                          </td>
+                          <td>
+                            10000
+                          </td>
+                          <td>
+                            11000
+                          </td>
+                          <td>
+                            10
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            12WERT
+                          </td>
+                          <td>
+                            IPHONE
+                          </td>
+                          <td>
+                            45000
+                          </td>
+                          <td>
+                            60000
+                          </td>
+                          <td>
+                            61
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            1456QS
+                          </td>
+                          <td>
+                            IWATCH
+                          </td>
+                          <td>
+                            10000
+                          </td>
+                          <td>
+                            60000
+                          </td>
+                          <td>
+                            0
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </script>
+	
+	<script>
+      $(function() {
+        $(document).on('click', ".custom-datepicker", function(e){
+          if(!$(this).hasClass('hasDatepicker')) {
+            $(this).datepicker().datepicker('show');
+          }
+        });	
+      });
+    </script>
+   
+  </body>
+</html>

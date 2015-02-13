@@ -1,0 +1,23 @@
+<div ng-init="panel={};panel.close=1;panel.body=1" ng-show="panel.close" class="panel panel-info" ng-model="widgetList" data-drag="true" data-jqyoui-options="{revert: 'invalid'}" jqyoui-draggable="{index: {{$index}},placeholder:true}">
+    <div class="panel-heading">
+        <span class="panel-title">
+            Inventory
+        </span>
+        <div class="btn-group pull-right widget-header-action">
+            <button class="btn btn-default" type="button" ng-click="panel.body=!panel.body">
+                <em ng-if="!panel.body" class="glyphicon glyphicon-chevron-down"></em> 
+                <em ng-if="panel.body" class="glyphicon glyphicon-chevron-up"></em> 
+            </button> 
+            <button class="btn btn-default" type="button" ng-click="getOrders();"><em class="glyphicon glyphicon-pushpin"></em> </button> 
+            <button type="button" class="btn btn-default" ng-click="main.dashboard='inv'"><em class="glyphicon glyphicon-zoom-in"></em></a>
+            <button class="btn btn-default" type="button" ng-click="panel.close=0;"><em class="glyphicon glyphicon-remove"></em> </button>
+        </div>
+    </div>
+    <div class="panel-body" ng-if="panel.body">
+        <div class="list-group">
+            <a href=""  class="list-group-item" ng-click="main.dashboard='inv'"><span class="badge">12</span>Out of Stock</a>
+            <a href=""  class="list-group-item" ng-click="main.dashboard='inv'"><span class="badge">7</span>Below Threshold</a>
+            <a href=""  class="list-group-item" ng-click="main.dashboard='inv'"><span class="badge">107</span>Aging Product</a>
+        </div>
+    </div>
+</div>

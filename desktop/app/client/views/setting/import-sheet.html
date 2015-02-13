@@ -1,0 +1,117 @@
+
+<div  ng-if="main.dashboard=='importsheet'">
+
+<script src="jquery-1.9.1.js"></script>
+<script src="jquery.ajaxfileupload.js"></script>
+
+<script>
+function validator()
+{
+
+ var fileObject;
+ 
+   if(formatValidator()){
+   
+   var formatObject = document.getElementsByName('format');
+   var formatSelected;
+   for(var i = 0; i < formatObject.length; i++)
+  { 
+   if(formatObject[i].checked){formatSelected = formatObject[i].value;}
+  }
+   fileObject=document.getElementById('upload');
+  
+   if(fileObject.value!=''){
+     $('input[type=file]').val(''); 
+    
+   }
+   else {
+   console.log( document.getElementById('upload'));
+   document.getElementById('upload').setAttribute("accept","."+formatSelected);}
+   }
+   else return false;
+   
+}  
+ function formatValidator()
+ {
+  var formatObject = document.getElementsByName('format');
+  if(formatObject[0].checked||formatObject[1].checked)return true;
+  else return false;
+}
+
+ function sheetValidator(){
+   var sheetTypeObject = document.getElementsByName('sheetType');
+  if(sheetTypeObject[0].checked||sheetTypeObject[1].checked)return true;
+  else return false;
+ } 
+ 
+ function extensionValidator(){
+  var fileObject=document.getElementById('upload');
+   
+   if(fileObject.value!='')return true;
+   else return false;
+ 
+ }
+
+function finalValidator(){
+
+  if(formatValidator()&&sheetValidator()&&extensionValidator())return true;
+  else return false;
+  
+
+}
+
+function divInitializer(){
+  $('#successMessage').css('font-size','20px');
+  $('#successMessage').text('Fill the form carefully');
+  $('#successMessage').css('color','#000000')
+
+}
+
+</script>
+
+<script type="text/javascript">
+$('#successMessage').css('font-size','20px');
+$(function(){
+    $('#submit')
+	   .click(function (e1){
+	    console.log(finalValidator());
+	   if(finalValidator()){
+	  $('#my-form')
+      .submit( function( e ) {
+      $.ajax({
+      url: $("#my-form").prop('action'),
+      type: 'POST',
+      data: new FormData( this ),
+      processData: false,
+      contentType: false,
+	  success :function(data){
+	  console.log(data);
+	//  console.log(request);
+	  $('#my-form')[0].reset();
+	  $('input[type=file]').val('');
+	  $('#successMessage').html(data['code']+"  Successfull :"+data['success']+"    Unsuccessfull :"+data['unsuccess']+"   Already Exist :"+data['already']+"  <a href='/Excel'>click here for details</a>");
+	  $('#successMessage').css('color',data['color']);
+	  //setInterval(divInitializer, 5000);
+	  },
+	  error :function(err){console.log(err);}
+    });
+       e.preventDefault();
+        });
+	   }
+	   else {
+	   $('#successMessage').text('Please fill the form correctly');
+	     console.log('not valiedaot');}
+		e1.preventDefault
+		});
+});
+</script>
+<span id="successMessage" style="color:#000000">Fill the form carefully</span>
+<form id="my-form" action="showSheetUploadForm" method="post">
+	    <input type="radio" id="format" onchange="validator()" name="format" value="xlsx">xlsx<br>
+        <input type="radio" id="format"  onchange="validator()" name="format" value="csv">csv<br><br>
+		<input type="radio" name="sheetType" value="amazon">amazon<br>
+        <input type="radio" name="sheetType" value="flipkart">flipkart<br>
+		<input type="file" id="upload" name="upload" multiple="multiple"><br>
+		<input type="submit" id="submit" value="submit" name="submit">
+	</form>
+</div>

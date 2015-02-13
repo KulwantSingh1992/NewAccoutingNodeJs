@@ -1,0 +1,50 @@
+<div ng-init="panel={};panel.close=1;panel.body=1" ng-show="panel.close" class="panel panel-info" ng-model="widgetList" data-drag="true" data-jqyoui-options="{revert: 'invalid'}" jqyoui-draggable="{index: {{$index}},placeholder:true}">
+    <div class="panel-heading">
+        <span class="panel-title">
+            Purchase/Revenue
+        </span>
+        <div class="btn-group pull-right widget-header-action">
+            <button class="btn btn-default" type="button" ng-click="panel.body=!panel.body">
+                <em ng-if="!panel.body" class="glyphicon glyphicon-chevron-down"></em> 
+                <em ng-if="panel.body" class="glyphicon glyphicon-chevron-up"></em> 
+            </button> 
+            <button class="btn btn-default" type="button" ng-click="getOrders();"><em class="glyphicon glyphicon-pushpin"></em> </button> 
+            <a id="modal-973398" href="#order-container" role="button" class="btn btn-default glyphicon glyphicon-zoom-in" data-toggle="modal" style="margin-top: -1px;"></a>
+            <button class="btn btn-default" type="button" ng-click="panel.close=0;"><em class="glyphicon glyphicon-remove"></em> </button>
+        </div>
+    </div>
+	<script type="text/javascript">
+			function barchart(){
+				linechart();
+				var tt = document.createElement('div');
+				leftOffset = -($('html').css('padding-left').replace('px', '') + $('body').css('margin-left').replace('px', ''));
+				topOffset = -32;
+				tt.className = 'ex-tooltip';
+				document.body.appendChild(tt);
+				
+				var data = {"xScale":"ordinal","comp":[],"main":[{"className":".main.l1","data":[{"y":15,"x":"Nov 10"},{"y":11,"x":"Nov 11"},{"y":8,"x":"Nov 12"},{"y":10,"x":"Nov 13"},{"y":1,"x":"Nov 14"},{"y":6,"x":"Nov 15"},{"y":8,"x":"Nov 16"}]},{"className":".main.l2","data":[{"y":29,"x":"Nov 10"},{"y":33,"x":"Nov 11"},{"y":13,"x":"Nov 12"},{"y":16,"x":"Nov 13"},{"y":7,"x":"Nov 14"},{"y":18,"x":"Nov 15"},{"y":8,"x":"Nov 16"}]}],"type":"bar","yScale":"linear"};
+
+				var opts = {
+								"mouseover": function (d, i) {
+									var pos = $(this).offset();
+									//$(tt).text(d3.time.format(d.x + ': ' + d.y))
+									$(tt).text(d.y)
+									.css({top: topOffset + pos.top, left: pos.left + leftOffset,position:'absolute',background:'#F2F2F2','border-radius':'5px',padding:'5px',color:'#FF0000'})
+									.show();
+								},
+								"mouseout": function (x) {
+									$(tt).hide();
+								}
+							};
+				
+				var myChart = new xChart('bar', data, '#purchase-revenue', opts);
+			}
+		</script>
+    <div class="panel-body" ng-if="panel.body">
+        <figure style="width:100%; height:80%;margin:20px -18px 0px" id="purchase-revenue"></figure>
+		<div style="position: absolute;right: 0px;top: 55px;width: 150px;">
+			<div style="width:10px;margin:5px;background:#3880aa;height: 10px;float:left;"></div><div style="float:left;">Purchase</div>
+			<div style="width:10px;margin:5px;background:#4da944;height: 10px;float:left;"></div><div>Revenue</div>
+		<div>
+    </div>
+</div>

@@ -1,0 +1,18 @@
+<form role="form" class="form-inline form-filter">
+    <div class="form-group">
+        <input class="form-control" ng-model="productFilterForm.name" type="text" placeholder="Product Name" ng-enter="searchProductByName('searchText')">
+    </div>
+    <div class="form-group" ng-hide="main.dashboard=='sell'">
+        <select class="form-control" ng-model="productFilterForm.status">
+            <option value="" selected disabled class="hide">Status</option>
+            <option value="all">All</option>
+            <option value="listed">Listed</option>
+            <option value="unlisted">Not Listed</option>
+            <option value="mapped">Mapped</option>
+            <option value="unmapped">Unmapped</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <button ng-click="searchProductWithFilter()" class="btn btn-default">Search</button>
+    </div>
+</form>

@@ -1,0 +1,100 @@
+<ul class="nav nav-pills pull-left ng-scope" ng-controller="HeaderCtrl">
+    <li ng-mouseover="toggleSlideLeft()">
+        <img src="images/paxcom-logo-6060.png" title="Paxcom" style="height: 50px;">
+    </li>
+</ul>
+
+<div class="smallstat">
+    <span class="btn-group" style="margin-right: 20px;">
+        <span class="btn btn-primary">Today's Orders</span>
+    <span ng-if="desktopObject.dashboaddetails.order.STATUS=='NOT_INIT'" class="btn btn-default" style="border: 1px solid #ccc;height: 30px;">
+            <img src="images/loader-circle.GIF" alt="loading..." />
+        </span>
+    <span ng-if="!desktopObject.dashboaddetails.order.STATUS" class="btn btn-default" style="border: 1px solid #ccc;">    
+            {{desktopObject.dashboaddetails.order.ordersToday.TOTAL.toString() || '-'}}
+        </span>
+    </span>
+    <span class="btn-group" style="margin-right: 20px;">
+        <span class="btn btn-primary">Today's Sale</span>
+    <span ng-if="desktopObject.dashboaddetails.account.STATUS=='NOT_INIT'" class="btn btn-default" style="border: 1px solid #ccc;height: 30px;">
+            <img src="images/loader-circle.GIF" alt="loading..." />
+        </span>
+    <span ng-if="desktopObject.dashboaddetails.account.STATUS=='ERROR'" class="btn btn-default" style="border: 1px solid #ccc;color:red;height: 30px;"> - </span>
+    <span ng-if="desktopObject.dashboaddetails.account.revenue" class="btn btn-default" style="border: 1px solid #ccc;">
+            {{desktopObject.dashboaddetails.account.revenue | currency:"&#8377;" ||'-' }}
+        </span>
+    </span>
+    <span class="btn-group" style="margin-right: 20px;">
+        <span class="btn btn-primary">Today's Profit</span>
+    <span ng-if="desktopObject.dashboaddetails.account.STATUS=='NOT_INIT'" class="btn btn-default" style="border: 1px solid #ccc;height: 30px;">
+            <img src="images/loader-circle.GIF" alt="loading..."/>
+    </span>
+	<span ng-if="desktopObject.dashboaddetails.account.STATUS=='ERROR'" class="btn btn-default" style="border: 1px solid #ccc;color:red;height: 30px;"> - </span>
+    <span ng-if="desktopObject.dashboaddetails.account.profit" class="btn btn-default" style="border: 1px solid #ccc;">
+            {{desktopObject.dashboaddetails.account.profit | currency:"&#8377;" || '-'}}
+    </span>
+    </span>
+</div>
+
+<!--<ul class="nav nav-pills pull-right ng-scope" style="position: absolute;right: 25px;top: 50px;">
+    <div class="clearfix channel-indicator">
+        <div class="col-md-6 column">
+            <img src="images/flipkart-16x16.png">
+            <span class="glyphicon glyphicon-flash error">&nbsp;</span>
+        </div>
+        <div class="col-md-6 column">
+            <img src="images/amazon-16x16.png">
+            <span class="glyphicon glyphicon-flash success">&nbsp;</span>
+        </div>
+    </div>
+</ul>-->
+
+<ul class="nav nav-pills pull-right">
+    <li class="dropdown notification">
+        <a data-toggle="dropdown" data-hover="dropdown" data-delay="200" data-close-others="false" class="glyphicon glyphicon-bell dropdown-toggle" style="cursor: pointer;font-size: 20px;"></a>
+        <ul class="dropdown-menu dropdown-menu-right prevent-hide">
+            <li><a href=""><span class="glyphicon glyphicon-envelope"></span>You have one new order <small class="muted"> - 19 hours ago</small></a>
+            </li>
+            <li><a href=""><span class="glyphicon glyphicon-envelope"></span>You have two new orders <small class="muted"> - 2 days ago</small></a>
+            </li>
+            <li><a href=""><span class="glyphicon glyphicon-envelope"></span>Your one order shipped<small class="muted"> - 2 days ago</small></a>
+            </li>
+            <li class="viewmore"><a href="">View More Notifications</a>
+            </li>
+        </ul>
+    </li>
+    <li class="dropdown" ng-controller="HeaderCtrl">
+        <a data-toggle="dropdown" data-hover="dropdown" data-delay="200" ng-click="checkRadioButtonStatus();" data-close-others="false" class="glyphicon glyphicon-cog dropdown-toggle" style="cursor: pointer;font-size: 20px;" onclick="javascript:($('.radioButton').show())"></a>
+        <ul style="width:400px;" class="dropdown-menu dropdown-menu-right prevent-hide">
+            <li>
+                <button style="margin-right: 6px;" class="btn btn-default pull-right" type="button" data-toggle="dropdown" onclick="javascript:($('.radioButton').hide())">
+                    <em class="glyphicon glyphicon-remove"></em>
+                </button>
+            </li>
+            <li>
+                <div ng-include="'views/common/action.html'"></div>
+            </li>
+        </ul>
+    </li>
+
+    <li class="dropdown">
+
+    <li ng-click="">
+        <a href="/helpdoc/PaxcomTerminalHelp.pdf" target="_blank" class="glyphicon glyphicon-question-sign" style="cursor: pointer;font-size: 20px;"></a>
+    </li>
+    
+    <li class="dropdown" ng-controller="HeaderCtrl">
+        <a data-toggle="dropdown" data-hover="dropdown" data-delay="200" data-close-others="false" class="glyphicon glyphicon-envelope" style="cursor: pointer;font-size: 20px;" ></a>
+        <ul style="width:400px;" class="dropdown-menu dropdown-menu-right prevent-hide">
+            <li style="margin-left: 9px; margin-bottom: -14px">Share Feedback</li>
+            <li>
+            <textarea rows="6" cols="50" style="margin-left: 11px;margin-top: 20px;" id="FeedbackTextArea"></textarea>
+                <button type="button" class="btn btn-primary pull-right" style="margin-right: 17px;margin-top: 0px" ng-click="sendFeedback();" >Submit<img id="feedbackLoaderImg" style="display:none;margin-left: 8px;" src="images/loader-circle-blue.GIF"></button>
+                <input type="checkbox" ng-model="isChecked" style="margin-left:12px; height:20px;">
+                    <span style="margin-left:5px; position:fixed ;margin-top:4px">Please check to send log file</span>
+                </input>
+            </li>
+        </ul>
+    </li>
+    
+</ul>    

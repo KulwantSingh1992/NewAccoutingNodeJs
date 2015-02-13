@@ -1,0 +1,19 @@
+<div ng-init="main={};main.dashboard='dashboard';">
+    <div class="row clearfix">
+        <div ng-include="'views/dashboard/top-view.html'"></div>
+    </div>
+    <div ng-if="main.dashboard=='dashboard'" class="dashboard">
+        <div class="row clearfix">
+            <div ng-repeat="item in widgetList" class="col-md-4 column" ng-model='widgetList' data-drop="true" jqyoui-droppable="{index: {{$index}}, onDrop:'dropCallback(item, $index)'}">
+                <div ng-include="item.url" class="custom-widget"></div>
+            </div>
+        </div>
+    </div>
+
+    <div ng-include="'views/order/orders-details.html'"></div>
+    <div ng-include="'views/dashboard/return-details.html'"></div>
+    <div ng-include="'views/dashboard/accounting-details.html'"></div>
+    <div ng-include="'views/dashboard/inventory-details.html'"></div>
+    <div ng-include="'views/dashboard/sale-coach-details.html'"></div>
+    
+</div>

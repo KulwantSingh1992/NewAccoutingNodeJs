@@ -1,0 +1,30 @@
+<form id="paytm-setting-form" role="loginform" data-toggle="validator">
+    <div class="form-group">
+        <label for="MerchantId">Merchant Id</label>
+        <label for="" style="color:red;">*</label>
+        <input type="text" class="form-control"  value="{{settingDetail.PTM.merchantId}}" id="ptmmerchantId" name="merchantId" placeholder="Enter Merchant Id" >
+    </div>
+    <div class="form-group">
+        <label for="ClientId">Client Id</label>
+        <label for="" style="color:red;">*</label>
+        <input type="text" class="form-control" value="{{settingDetail.PTM.ptmClientId}}" id="ptmClientId" name="clientId" placeholder="Enter ClientId">
+    </div>
+
+    <div class="form-group">
+        <label for="ClientSecret">Client Secret</label>
+        <label for="" style="color:red;">*</label>
+        <input type="text" class="form-control" value="{{settingDetail.PTM.clientSecret}}" id="ptmclientSecret" name="clientSecret" placeholder="Enter email">
+    </div>
+
+    <div class="form-group">
+        <label for="username">Username</label>
+        <label for="" style="color:red;">*</label>
+        <input type="text" class="form-control" value="{{settingDetail.PTM.username}}" id="ptmusername" name="username" placeholder="Enter email">
+    </div>
+
+    <div class="form-group">
+        <label for="password">Password</label>
+        <label for="" style="color:red;">*</label>
+        <input type="password" class="form-control" value="{{settingDetail.PTM.ptmPassword}}" id="ptmPassword" name="password" placeholder="Enter password">
+    </div>
+</form>

@@ -1,0 +1,76 @@
+
+
+<div class="row clearfix" ng-if="main.dashboard=='viewsheet'">
+
+
+<script src="jquery-1.9.1.js"></script>
+<script>
+
+$('#viewTransAnchor').click(function(e1){
+ console.log('here in ajax');
+ var xmlhttp;
+ if (window.XMLHttpRequest)
+  {// code for IE7+, Firefox, Chrome, Opera, Safari
+  xmlhttp=new XMLHttpRequest();
+  }
+ else
+  {// code for IE6, IE5
+  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+  }
+  xmlhttp.open("GET","viewDataTrans",true);
+  xmlhttp.send();
+  xmlhttp.onreadystatechange=function()
+  {
+  if (xmlhttp.readyState==4 && xmlhttp.status==200)
+    {
+	//console.log(xmlhttp.responseText);
+	document.getElementById('viewDataTrans').style.display='block';
+	document.getElementById('viewDataTransEntry').style.display='none';
+    document.getElementById("viewTransDiv").innerHTML=xmlhttp.responseText;
+    }
+  }
+  //console.log(xmlhttp.responseText);
+//  document.getElementById("viewTransDiv").innerHTML=xmlhttp.responseText
+});
+
+$('#viewTransEntryAnchor').click(function(e1){
+ var xmlhttp;
+ if (window.XMLHttpRequest)
+  {// code for IE7+, Firefox, Chrome, Opera, Safari
+  xmlhttp=new XMLHttpRequest();
+  }
+ else
+  {// code for IE6, IE5
+  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+  }
+  xmlhttp.open("GET","viewDataTransEntry",true);
+  xmlhttp.send();
+  xmlhttp.onreadystatechange=function()
+  {
+  if (xmlhttp.readyState==4 && xmlhttp.status==200)
+    {
+	//console.log(xmlhttp.responseText);
+	document.getElementById('viewDataTrans').style.display='none';
+	document.getElementById('viewDataTransEntry').style.display='block';
+    document.getElementById("viewTransEntryDiv").innerHTML=xmlhttp.responseText;
+    }
+  }
+});
+
+</script>
+
+
+<div id="viewDataTrans">
+
+<a id="viewTransEntryAnchor" href="#" >Account Transactions Entry</a>
+<br>
+<div id='viewTransDiv'></div>
+
+</div>
+
+
+<div id="viewDataTransEntry">
+<a id='viewTransAnchor' href="#" >Account Transactions</a>
+<br>
+<div id='viewTransEntryDiv'></div>
+</div>

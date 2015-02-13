@@ -1,0 +1,107 @@
+<div ng-controller="topProductChartCtrl" ng-init="panel={};panel.close=1;panel.body=1" ng-show="panel.close" class="panel panel-info">
+    <div class="panel-body" ng-if="panel.body" style="min-height: 145px;margin-top: 10px;margin-bottom: 10px;">
+        <div class="col-lg-4 col-md-4 col-sm-4">
+            <figure id="topProductChart" ng-init="sellingProduct('topProductChart');" ng-dblclick="sellingProduct('bigTopProductChart');"
+                                    ></figure>
+        </div>
+        <!-- Modal Top Order Chart -->
+        <div id="topOrderChartModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <b>Top Selling Products</b>
+                        <div class="btn-group pull-right widget-header-action">
+                            <button class="btn btn-default" type="button" data-dismiss="modal" ng-click="sellingProduct('topProductChart');">
+                                <em class="glyphicon glyphicon-remove"></em>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="modal-body">
+                        <div class="panel-body">
+                            <div class="panel-group" role="tablist" aria-multiselectable="true" style="margin-bottom: 0px">
+                                <div class="panel panel-info">
+                                    <div class="panel-heading" role="tab" id="headingOne">
+                                        <h4 class="panel-title">
+                                            <a data-toggle="collapse" href="/#collapseOne" aria-expanded="true" aria-controls="collapseOne">&nbsp;
+                                            </a>
+                                        </h4>
+                                        <div class="pull-right" style="margin-top:-19px;">
+                                            <form role="form" class="form-inline form-filter">
+                                                <div class="form-group">
+                                                    <div class="daterange mostProductRange pull-right" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc">
+                                                        <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
+                                                        <span></span> <b class="caret"></b>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                    <figure style="margin-left:-95px;" id="bigTopProductChart"></figure>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        &nbsp;
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-4 col-sm-4" >
+            <figure id="mostCancelProductChart" ng-init="mostCancel('mostCancelProductChart');" ng-dblclick="mostCancel('bigMostCancelProductChart');"></figure>
+        </div>
+        <!-- Modal Most Cancel Order Chart -->
+        <div id="mostCancelChartModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <b>Most Cancelled Products</b>
+                        <div class="btn-group pull-right widget-header-action">
+                            <button class="btn btn-default" type="button" data-dismiss="modal" ng-click="mostCancel('mostCancelProductChart');">
+                                <em class="glyphicon glyphicon-remove"></em>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="modal-body">
+                        <div class="panel-body">
+                            <div class="panel-group" role="tablist" aria-multiselectable="true" style="margin-bottom: 0px">
+                                <div class="panel panel-info">
+                                    <div class="panel-heading" role="tab" id="headingOne">
+                                        <h4 class="panel-title">
+<a data-toggle="collapse" href="/#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+&nbsp;
+</a>
+</h4>
+                                        <div class="pull-right" style="margin-top:-19px;">
+                                            <form role="form" class="form-inline form-filter">
+                                                <div class="form-group">
+                                                    <div class="daterange mostCancelRange pull-right" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc">
+                                                        <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
+                                                        <span></span> <b class="caret"></b>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                    <figure style="margin-left:-95px;" id="bigMostCancelProductChart"></figure>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        &nbsp;
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-4 col-sm-4">
+            <div style="text-align:left;font-weight:bold;margin-top: -5px;background: rgba(0, 0, 0, .02);font-size:16px;color:#31708f;">Product not sold in last 7 days</div>
+            <figure id="less_sold" class="less_sold" ng-init="notSoldProducts();">
+                <div ng-repeat="item in salesData" style="min-height: 25px;">
+                    <div title="{{'Product Name: '+item.name}}" style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;">{{item.name}}</div>
+                </div>
+                <div ng-if="!salesData.length">No Data</div>
+            </figure>
+        </div>
+    </div>
+</div>

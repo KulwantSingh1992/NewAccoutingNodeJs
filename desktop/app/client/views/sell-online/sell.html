@@ -1,0 +1,91 @@
+<div ng-if="main.dashboard=='sell'" ng-controller="SellDetailsCtrl">
+    <div class="panel panel-info">
+        <div class="panel-heading" role="tab" id="headingOne">
+            <span class="panel-title"><span class="prod-name" style="font-weight: bold;">Quick Sell</span></span>
+            <div class="btn-group pull-right widget-header-action">
+                <ng-include src="'views/sell-online/sell-header.html'"></ng-include>
+            </div>
+        </div>
+    </div>
+    <div class="panel panel-info" ng-init="productFilterForm.status='listed';searchProductWithFilter();">
+        <div class="panel-heading">
+            <div class="pull-left" ng-include="'views/sell-online/product-filter-form.html'"></div>
+            <div class="pull-right" ng-if="products.length > 10 && activeChannelsConfigs.length" ng-include="'views/sell-online/product-pagination.html'"></div>
+        </div>
+        <div class="panel-body">
+            <table ng-if="products.length && activeChannelsConfigs.length" style="text-align:center;margin-bottom: 0;" class="table table-bordered sell-online-sell-table">
+                <thead>
+                    <tr>
+                        <th rowspan="2" style="text-align: left;">Product Name</th>
+                        <th rowspan="2" style="width: 5%">Available Quantity</th>
+                        <th rowspan="2" style="width: 5%">₹ Base Price</th>
+                        <th colspan="2" style="width: 20%" ng-repeat="channel in activeChannelsConfigs"><span ng-bind="channel.fullName"></span>
+                        </th>
+                        <th rowspan="2" style="width: 8%"></th>
+                    </tr>
+                    <tr>
+                        <th ng-repeat-start="channel in activeChannelsConfigs">Quantity</th>
+                        <th ng-repeat-end>₹ Price</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="product in values" data-id="product-{{product.id}}">
+                        <td style="text-align: left;">{{product.name || '-'}}</td>
+                        <td>{{product.available_quantity || '-'}}</td>
+                        <td>{{product.min_price | currency:"&#8377;" || '-'}}</td>
+
+                        <td ng-repeat-start="channel in activeChannelsConfigs " class="input-field" ng-if="product[channel.channelName + '_is_listed']">
+                          <!--  <input type="text" class="form-control" ng-model="product[channel.channelName + '_available_quantity']" /> -->
+                            
+                            <div style="position:relative;"><!--_{{product.id}} -->
+                                <input type="text" maxlength="9" class="form-control" ng-model="product[channel.channelName + '_available_quantity']" name="{{channel.channelName}}_available_quantity" class="form-control" style="width: 110px;padding: 5px;height: 25px;" />
+
+                            <div class="error_div_positon" >
+                                    <button name="{{channel.channelName}}_available_quantity_button" class="btn btn-danger glyphicon glyphicon-exclamation-sign custom-tooltip error_button_position" data-toggle="tooltip"></button>
+                                </div>
+                         </div>
+                            
+                        </td>
+                        <td ng-if="product[channel.channelName + '_is_listed']" class="action input-field" style="position: relative;">
+
+                           <!-- <input type="text" class="form-control" ng-model="product[channel.channelName + '_listed_price']" />-->
+                            <!--display:none -->
+                        <div style="position:relative;">
+                        <input type="text"  class="form-control" ng-model="product[channel.channelName + '_listed_price']" name="{{channel.channelName}}_listed_price" class="form-control" style="width: 110px;padding: 5px;height: 25px;" />
+
+                            <div class="error_div_positon">
+                                    <button name="{{channel.channelName}}_listed_price_button" class="btn btn-danger glyphicon glyphicon-exclamation-sign custom-tooltip error_button_position" data-toggle="tooltip"></button>
+                               <!-- <button data-toggle="dropdown" data-hover="dropdown" data-delay="200" data-close-others="false" id="{{channel.channelName}}_channel_response_danger" class="btn btn-danger glyphicon glyphicon-exclamation-sign dropdown-toggle" style="position: absolute; right: 8px;padding: 1px 3px;top: 5px;display: none;"></button>
+                                <ul class="dropdown-menu dropdown-menu-right prevent-hide" style="padding: 5px;width: 350px;margin-top: -22px;margin-right: 6px;"></ul>-->
+                            </div>
+                         </div>
+
+
+                            <!--<span style="float: left;margin-top: 1px;">({{product[channel.channelName + '_min_price']}})<img src="images/tooltip.png" class="custom-tooltip" data-toggle="tooltip" data-placement="top" title="Marketplace Minimum Price"></span>-->
+                            <button data-id="product-{{product.id}}-{{channel.channelName}}-button" style="display: none"></button>
+                            <button class="btn btn-success glyphicon glyphicon-ok" style="position: absolute; right: 8px;padding: 1px 3px;top: 5px;display: none;"></button>
+                            <button type="button" class="btn btn-danger glyphicon glyphicon-exclamation-sign" id="{{channel.channelName}}_response_danger" data-container="body" data-toggle="popover" data-placement="left" style="overflow: visible; cursor: pointer; color: rgb(255, 255, 255);right: 8px;position: absolute;padding: 1px 3px;top: 5px; display:none"></button>
+                        </td>
+
+                        <td ng-if="!product[channel.channelName + '_is_listed']" colspan="2" ng-repeat-end>Product is not listed</td>
+
+                        <!--<td class="input-field"><input type="text" class="form-control" ng-model="product.AMAZON_available_quantity"/></td>
+                        <td class="input-field"><input type="text" class="form-control" ng-model="product.AMAZON_listed_price"/></td>
+                        <td class="input-field"><input type="text" class="form-control" ng-model="product.FK_available_quantity"/></td>
+                        <td class="input-field"><input type="text" class="form-control" ng-model="product.FK_listed_price"/></td>-->
+
+                        <td>
+                            <div class="action btn-group">
+                                <button class="btn btn-default" ng-click="listAndSellSellData(product);" data-id="product-{{product.id}}-button" style="border-radius: 0;">Update</button>
+                                
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div ng-if="!products.length && activeChannelsConfigs.length" style="font-size: 18px;padding: 10px;">No listed product found...</div>
+            <div ng-if="!activeChannelsConfigs.length" style="font-size: 18px;padding: 10px;">No Channel Configured, Please configure channel to start listing</div>
+            <div class="pull-right" ng-if="products.length > 10 && activeChannelsConfigs.length" style="margin: 20px;" ng-include="'views/sell-online/product-pagination.html'"></div>
+        </div>
+    </div>
+</div>
